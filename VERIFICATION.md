@@ -1,7 +1,18 @@
-# Verification — 60-second guided journey edition
+# Verification — complete development overview
 
 
-## Current update
+
+## Overview checks
+
+- Verified all 16 cards and their loaded 3D previews in each global mode: Assembled, Separate and All parts (48 previews). All parts exposes 113 stage-specific structure buttons across the collection.
+- Opened all sixteen stages by keyboard Enter from the overview. Each inspection panel showed the correct stage, All parts mode and nonempty stage explanation.
+- Selected the Week 24 heart directly from its card; checked the matching stage-specific explanation. Changed the mode from inside the inspection panel and verified that the overview and inspector both switched to Separate.
+- Escape closed inspection and returned focus to the selected stage. The overview remained in place. Opening and closing the compact-screen inspector was also checked.
+- At 1280 × 720, all sixteen stages and their short notes fit in one overview. At 543 × 724, all sixteen stage cards fit, with complete notes shown on selection. Checked the compact inspector’s mode controls and Week 40 nervous-system information.
+- Journey playback, pause and seeking to the Week 24 collection worked. Exiting restored the previous stage and overview mode. The 60-second choreography and downloadable video content remain unchanged.
+- The stage-level browsing timeline is hidden; the optional film retains its playback scrubber. Very narrow or short layouts intentionally scroll to preserve readability.
+
+## Earlier journey update
 
 - Cord and placenta default to checked and rendered at all ten modeled support stages (Day 35 through Week 40). Captured and reviewed each stage for attachment and framing. The cord starts slightly inside a ray-sampled point on each body surface and terminates inside the simplified placental disc.
 - Hiding support at Week 40 remained hidden at Week 12. Starting the guide showed support in the late-stage shot; exiting restored the hidden choice. Reset restored checked and visible support.

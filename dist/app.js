@@ -1,7 +1,8 @@
 import * as T from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
-import {stages,systems,detail} from './stages.js?v=journey60b';
-import {buildStage} from './models.js?v=journey60b';
+import {stages,systems,detail} from './stages.js?v=board1';
+import {buildStage} from './models.js?v=board1';
+import {createBoard} from './board.js?v=board1';
 import {planLayout} from './layout.js';
 import {journeyAt,duration as journeyDuration} from './journey.js';
 const $=id=>document.getElementById(id),clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t;
@@ -22,6 +23,7 @@ const models=Array(stages.length),loads=new Map();
 const state={view:'assembled',hover:null,stage:8,selected:null,isolate:false,explode:0,hidden:new Set(),playing:false,paused:false,time:0};
 let actualTray=0,layout=null,hiddenBeforeParts=null,hiddenBeforeFilm=null;
 let currentCue=journeyAt(0);
+let board=null,boardMode='assembled',boardBeforeFilm=null;
 let actualExplode=0,cameraGoal=null,recording=false,recorder=null,chunks=[],lastTime=performance.now(),filmStart=0,requestId=0;
 let dragging=false,pointerTarget=new T.Vector2(),pointerActual=new T.Vector2();
 const identityRotation=new T.Quaternion();
@@ -40,7 +42,10 @@ function refreshTray(){
 }
 function setAnatomyPanel(open){document.body.dataset.layersOpen=String(open);$('anatomyToggle').setAttribute('aria-expanded',String(open));$('anatomyToggle').textContent=open?'Close anatomy':'Anatomy';}
 $('anatomyToggle').onclick=()=>setAnatomyPanel(document.body.dataset.layersOpen!=='true');
+document.querySelectorAll('[data-detail-view]').forEach(b=>b.onclick=()=>setView(b.dataset.detailView));
 function syncView(){
+ document.querySelectorAll('[data-detail-view]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.detailView===state.view));
+ document.querySelector('.view-hint').textContent=state.view==='parts'&&!state.isolate?'Choose a part to explore':'Drag to rotate · Scroll to zoom';
  document.body.dataset.view=state.view;document.body.dataset.inspecting=String(state.view==='parts'&&state.isolate);
  for(const [id,value] of [['assembledView','assembled'],['separatedView','separated'],['partsView','parts']])$(id).setAttribute('aria-pressed',state.view===value);
  $('backToParts').hidden=state.view!=='parts'||!state.selected;
@@ -48,7 +53,7 @@ function syncView(){
  $('clearSelection').textContent=state.view==='parts'?'← Back to all parts':'Restore full view';
 }
 function setView(view,{manual=true,frame=true}={}){
- if(manual)pauseForInput();
+ if(manual){pauseForInput();boardMode=view;board?.setMode(view);}
  if(view==='parts'&&state.view!=='parts'){hiddenBeforeParts=new Set(state.hidden);state.hidden.clear();}
  if(view!=='parts'&&state.view==='parts'&&hiddenBeforeParts){state.hidden=hiddenBeforeParts;hiddenBeforeParts=null;}
  setAnatomyPanel(false);state.view=view;state.selected=null;state.isolate=false;state.hover=null;state.explode=view==='separated'?1:0;
@@ -81,7 +86,7 @@ function selectPart(k){if(state.view!=='parts')setAnatomyPanel(true);state.selec
 function frameDefault(){if(state.view==='parts'){cameraGoal=overviewCamera();return;}const support=stages[state.stage].parts.includes('support')&&!state.hidden.has('support');const target=new T.Vector3(support?.20:0,.12,0);const distance=Math.max(5.8,3.4/Math.max(.6,camera.aspect))+state.explode*1.7;cameraGoal={pos:target.clone().add(new T.Vector3(distance*.60,.28,distance*.80)),target};}
 async function setStage(value,{manual=true}={}){
  const i=clamp(Math.round(Number(value)||0),0,stages.length-1);if(manual){pauseForInput();restoreCleavage();}
- const ticket=++requestId;state.stage=i;
+ const ticket=++requestId;state.stage=i;if(manual)board?.select(i,document.body.dataset.inspector==='true');
  if(!stages[i].parts.includes(state.selected)){state.selected=null;state.isolate=false;}
  $('stageSlider').value=i;$('stageSelect').value=i;$('previous').disabled=i===0;$('next').disabled=i===stages.length-1;
  const s=stages[i];$('phase').textContent=`Human development · ${s.phase}`;$('stageName').textContent=s.name;$('stageNote').textContent=s.note;$('ageLabel').textContent=s.age;$('dating').textContent=s.pf?'After fertilization':'Pregnancy age';$('scaleText').textContent=s.scale;
@@ -103,7 +108,7 @@ $('explode').oninput=e=>{pauseForInput();if(state.view==='parts')setView('separa
 $('isolate').onclick=()=>{pauseForInput();state.isolate=!state.isolate;updateSelection();state.isolate?focusSelected():frameDefault()};
 $('clearSelection').onclick=()=>{if(state.view==='parts'){$('backToParts').click();return;}pauseForInput();state.selected=null;state.isolate=false;updateSelection();frameDefault()};
 function reset(){setAnatomyPanel(false);state.view='assembled';hiddenBeforeParts=null;actualTray=0;controls.enableRotate=true;controls.maxDistance=14;state.selected=null;state.isolate=false;state.explode=0;state.hidden=new Set();$('explode').value=0;$('explodeValue').textContent='0%';syncView();resize();refreshTray();updateLayers();frameDefault();}
-$('reset').onclick=()=>{pauseForInput();reset()};$('sourceBtn').onclick=()=>$('sources').showModal();$('closeSources').onclick=()=>$('sources').close();$('sources').onclick=e=>{if(e.target===$('sources'))$('sources').close()};
+$('reset').onclick=()=>{pauseForInput();reset();boardMode='assembled';board?.setMode(boardMode)};$('sourceBtn').onclick=()=>$('sources').showModal();$('closeSources').onclick=()=>$('sources').close();$('sources').onclick=e=>{if(e.target===$('sources'))$('sources').close()};
 const ray=new T.Raycaster(),mouse=new T.Vector2();let down=[0,0];
 canvas.addEventListener('pointerdown',e=>{pauseForInput();dragging=true;down=[e.clientX,e.clientY];pointerTarget.set(0,0)});
 window.addEventListener('pointerup',()=>dragging=false);
@@ -139,11 +144,11 @@ function updateModel(dt){
  document.querySelectorAll('[data-tray]').forEach(button=>{
   const entry=layout?.entries[button.dataset.tray];button.hidden=state.view!=='parts'||state.isolate||!entry||state.playing;
   if(!entry)return;const point=root.localToWorld(entry.label.clone()).project(camera);const top=root.localToWorld(entry.slot.clone().add(new T.Vector3(0,.76,.1))).project(camera);const height=Math.max(45,(point.y-top.y)*-.5*rect.height);
-  button.style.left=(point.x*.5+.5)*rect.width+'px';button.style.top=(-top.y*.5+.5)*rect.height+'px';button.style.height=height+'px';button.style.width=Math.max(100,rect.height/camera.position.distanceTo(controls.target)*3.2)+'px';button.dataset.highlight=String(state.hover===button.dataset.tray);
+  button.style.left=(point.x*.5+.5)*rect.width+'px';button.style.top=(-top.y*.5+.5)*rect.height+'px';button.style.height=height+'px';button.style.width=Math.min(110,Math.max(54,rect.width/(layout?.columns||3)*.85))+'px';button.dataset.highlight=String(state.hover===button.dataset.tray);
  });
  document.body.dataset.explode=state.explode.toFixed(2);document.body.dataset.renderedExplode=actualExplode.toFixed(2);document.body.dataset.renderedView=actualTray>.98?'parts':actualTray<.02?'anatomy':'transition';
 }
-function resize(){const rect=$('viewport').getBoundingClientRect();if(state.playing){renderer.setPixelRatio(1);renderer.setSize(1920,1080,false);renderer.setViewport(0,180,1920,900);camera.aspect=1920/900;}else{renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(Math.max(1,rect.width),Math.max(1,rect.height),false);renderer.setViewport(0,0,Math.max(1,rect.width),Math.max(1,rect.height));camera.aspect=rect.width/rect.height;}camera.updateProjectionMatrix();}
+function resize(){const rect=$('viewport').getBoundingClientRect();if(state.playing){renderer.setPixelRatio(1);renderer.setSize(1920,1080,false);renderer.setViewport(0,180,1920,900);camera.aspect=1920/900;}else{renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(Math.max(1,rect.width),Math.max(1,rect.height),false);renderer.setViewport(0,0,Math.max(1,rect.width),Math.max(1,rect.height));camera.aspect=Math.max(1,rect.width)/Math.max(1,rect.height);}camera.updateProjectionMatrix();}
 window.addEventListener('resize',()=>{resize();refreshTray();if(state.view==='parts')state.isolate?focusSelected():frameDefault();});
 
 const previousFrame=document.createElement('canvas');previousFrame.width=1920;previousFrame.height=1080;const previousCtx=previousFrame.getContext('2d');let transitionTime=-10;
@@ -196,7 +201,7 @@ function filmOverlay(){
 async function startFilm(capture=false){
  $('loadText').textContent='Preparing the complete journey';$('loading').hidden=false;
  try{for(let i=0;i<16;i++)await ensure(i);}catch(e){$('loadText').textContent=e.message;return}
- $('loading').hidden=true;hiddenBeforeFilm=new Set(hiddenBeforeParts||state.hidden);reset();cameraGoal=null;state.playing=true;state.paused=false;state.time=0;transitionTime=-10;filmStart=performance.now();recording=capture;actualExplode=0;controls.enabled=false;pointerTarget.set(0,0);pointerActual.set(0,0);document.body.classList.add('filmMode');film.hidden=false;$('filmControls').hidden=false;$('pauseFilm').textContent='Pause';$('filmStatus').textContent=capture?'Recording 1080p':'';$('filmSeek').disabled=capture;$('pauseFilm').disabled=capture;resize();await setStage(0,{manual:false});
+ $('loading').hidden=true;boardBeforeFilm={mode:boardMode,stage:state.stage,open:document.body.dataset.inspector==='true'};hiddenBeforeFilm=new Set(hiddenBeforeParts||state.hidden);reset();cameraGoal=null;state.playing=true;state.paused=false;state.time=0;transitionTime=-10;filmStart=performance.now();recording=capture;actualExplode=0;controls.enabled=false;pointerTarget.set(0,0);pointerActual.set(0,0);document.body.classList.add('filmMode');film.hidden=false;$('filmControls').hidden=false;$('pauseFilm').textContent='Pause';$('filmStatus').textContent=capture?'Recording 1080p':'';$('filmSeek').disabled=capture;$('pauseFilm').disabled=capture;resize();await setStage(0,{manual:false});
  if(capture){
   const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(m=>MediaRecorder.isTypeSupported(m));chunks=[];
   recorder=new MediaRecorder(film.captureStream(30),{mimeType:mime,videoBitsPerSecond:14000000});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
@@ -204,18 +209,29 @@ async function startFilm(capture=false){
  }
  document.body.dataset.playing='true';
 }
-function stopFilm(){if(!state.playing)return;restoreCleavage();state.playing=false;state.paused=false;if(recorder?.state==='recording')recorder.stop();recording=false;state.view='assembled';hiddenBeforeParts=null;if(hiddenBeforeFilm){state.hidden=hiddenBeforeFilm;hiddenBeforeFilm=null;}actualTray=0;controls.enabled=true;controls.enableRotate=true;document.body.classList.remove('filmMode');film.hidden=true;$('filmControls').hidden=true;root.rotation.set(0,0,0);state.selected=null;state.explode=0;actualExplode=0;state.isolate=false;$('explode').value=0;$('explodeValue').textContent='0%';updateLayers();frameDefault();resize();document.body.dataset.playing='false';}
+function stopFilm(){if(!state.playing)return;restoreCleavage();state.playing=false;state.paused=false;if(recorder?.state==='recording')recorder.stop();recording=false;state.view='assembled';hiddenBeforeParts=null;if(hiddenBeforeFilm){state.hidden=hiddenBeforeFilm;hiddenBeforeFilm=null;}actualTray=0;controls.enabled=true;controls.enableRotate=true;document.body.classList.remove('filmMode');film.hidden=true;$('filmControls').hidden=true;root.rotation.set(0,0,0);state.selected=null;state.explode=0;actualExplode=0;state.isolate=false;$('explode').value=0;$('explodeValue').textContent='0%';updateLayers();frameDefault();resize();document.body.dataset.playing='false';if(boardBeforeFilm){const saved=boardBeforeFilm;boardBeforeFilm=null;setView(saved.mode,{manual:false});setStage(saved.stage,{manual:false}).then(()=>{board?.select(saved.stage,saved.open);frameDefault();resize();});}}
 $('play').onclick=()=>startFilm();$('record').onclick=()=>{if(!window.MediaRecorder){$('record').textContent='Export unavailable';return}startFilm(true)};
 $('stopFilm').onclick=stopFilm;$('pauseFilm').onclick=()=>{state.paused=!state.paused;$('pauseFilm').textContent=state.paused?'Resume':'Pause';filmStart=performance.now()-state.time*1000};
 $('filmSeek').oninput=e=>{state.time=+e.target.value;state.paused=true;$('pauseFilm').textContent='Resume';filmStart=performance.now()-state.time*1000};
-window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(state.playing)stopFilm();else setAnatomyPanel(false)}});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(state.playing)stopFilm();else if(document.body.dataset.inspector==='true')closeDetail()}});
 function animate(now){requestAnimationFrame(animate);const dt=Math.min(.06,(now-lastTime)/1000);lastTime=now;
  if(state.playing){if(!state.paused)state.time=clamp((now-filmStart)/1000,0,journeyDuration);choreograph(state.time);$('filmSeek').value=state.time;$('filmSeek').setAttribute('aria-valuetext',`${Math.floor(state.time)} of ${journeyDuration} seconds`);$('filmTime').textContent=`${Math.floor(state.time/60)}:${String(Math.floor(state.time%60)).padStart(2,'0')}`;}
  else{if(cameraGoal){const alpha=reduce.matches?1:1-Math.exp(-dt*5);camera.position.lerp(cameraGoal.pos,alpha);controls.target.lerp(cameraGoal.target,alpha);if(camera.position.distanceTo(cameraGoal.pos)<.003)cameraGoal=null;}controls.update();pointerActual.lerp(reduce.matches?new T.Vector2():pointerTarget,1-Math.exp(-dt*3));root.rotation.set(pointerActual.y*.016,pointerActual.x*.025,0);key.position.x=3+pointerActual.x*.35;document.documentElement.style.setProperty('--px',pointerActual.x*18+'px');document.documentElement.style.setProperty('--py',pointerActual.y*12+'px');}
- updateModel(dt);renderer.render(scene,camera);if(state.playing){filmOverlay();if(state.time>=journeyDuration)stopFilm();}
+ if(state.playing||document.body.dataset.inspector==='true'){updateModel(dt);renderer.render(scene,camera);}if(state.playing){filmOverlay();if(state.time>=journeyDuration)stopFilm();}
 }
+async function openDetail(i,part=null){
+ pauseForInput();$('detailPanel').hidden=false;document.body.dataset.inspector='true';
+ setView(boardMode,{manual:false});await setStage(i,{manual:false});board.select(i);resize();refreshTray();frameDefault();
+ if(part)selectPart(part);$('closeDetail').focus({preventScroll:true});
+}
+function closeDetail(){pauseForInput();$('detailPanel').hidden=true;document.body.dataset.inspector='false';board?.select(state.stage,false);board?.focus(state.stage);}
+$('closeDetail').onclick=closeDetail;
 const params=new URLSearchParams(location.search);const initial=params.has('stage')?clamp(Number(params.get('stage')),0,15):8;
-await setStage(initial,{manual:false});if(params.get('view')==='parts')setView('parts',{manual:false});if(params.get('view')==='separated')setView('separated',{manual:false});
-$('loading').hidden=true;frameDefault();resize();requestAnimationFrame(animate);document.body.dataset.ready='true';
-// Preload sequentially to keep initial rendering responsive and rapid scrubbing safe.
-(async()=>{for(let i=0;i<16;i++){await new Promise(r=>setTimeout(r,80));await ensure(i)}})().catch(e=>console.error('Stage preload:',e));
+document.body.dataset.inspector='false';
+await setStage(initial,{manual:false});
+board=createBoard({ensure,directions,openStage:openDetail});
+boardMode=['parts','separated'].includes(params.get('view'))?params.get('view'):'assembled';
+setView(boardMode,{manual:false});
+$('loading').hidden=true;resize();requestAnimationFrame(animate);document.body.dataset.ready='true';
+board.setMode(boardMode).catch(e=>{$('boardStatus').textContent='Some stage views could not load. Reload to retry.';console.error(e)});
+if(params.has('stage'))await openDetail(initial);
