@@ -1,3 +1,10 @@
+## Stage-to-Inspect correction — 24 October 2026
+
+- A stage without a selected structure now presents a visible part selector when the range moves into Inspect. Choosing a visible part completes the zoom; the hint remains visible instead of being replaced every animation frame.
+- The last targeted part is retained while the pointer moves to the slider. Targets are cleared when changing stages, hiding that structure, returning to the overview, or resetting.
+- Returning to Stage and dragging forward again restores the selected part’s information panel.
+- Browser checks cover no-target inspection, part-picker selection, forward/reverse inspection, and retained targeting. Existing slider regression tests still pass.
+
 ## Responsive update — 24 October 2026
 
 - Browser viewport checks at 320 × 568, 390 × 844, 844 × 390, 768 × 1024, 1024 × 768, and 1440 × 900. Reviewed phone overview, stage anatomy, organ information, tablet overview, and landscape inspection. Checked no horizontal document overflow and the camera framing indicator.
