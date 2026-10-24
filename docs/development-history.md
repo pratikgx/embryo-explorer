@@ -1,3 +1,7 @@
+# Development history
+
+These notes record earlier versions. The root README describes the current experience.
+
 Current navigation — continuous overview to component inspection
 
 The root opens all 16 stages. One slider and wheel/pinch input share exploration progress: Assembled 0, Separate 50, All parts 100, Stage 130, Inspect 160. The displayed percentage is normalized to this complete range. Past All parts, a hovered or selected stage expands on the same canvas. Past Stage, the camera approaches the targeted component. Without a target, progress stops at the applicable boundary. No separate page or modal is required.

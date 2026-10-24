@@ -1,0 +1,91 @@
+{
+  "estimated_bpm": 141.975,
+  "music_start_seconds": 13.116898,
+  "duration_seconds": 20,
+  "timing": [
+    {
+      "source_seconds": 0.0,
+      "output_seconds": 0.0
+    },
+    {
+      "source_seconds": 1.2,
+      "output_seconds": 1.2678
+    },
+    {
+      "source_seconds": 4.0,
+      "output_seconds": 3.8035
+    },
+    {
+      "source_seconds": 4.8,
+      "output_seconds": 4.6487
+    },
+    {
+      "source_seconds": 6.3,
+      "output_seconds": 6.3391
+    },
+    {
+      "source_seconds": 7.0,
+      "output_seconds": 6.7618
+    },
+    {
+      "source_seconds": 7.9,
+      "output_seconds": 7.607
+    },
+    {
+      "source_seconds": 9.2,
+      "output_seconds": 9.2974
+    },
+    {
+      "source_seconds": 9.8,
+      "output_seconds": 9.72
+    },
+    {
+      "source_seconds": 10.6,
+      "output_seconds": 10.5652
+    },
+    {
+      "source_seconds": 11.7,
+      "output_seconds": 11.8331
+    },
+    {
+      "source_seconds": 12.3,
+      "output_seconds": 12.2557
+    },
+    {
+      "source_seconds": 13.1,
+      "output_seconds": 13.1009
+    },
+    {
+      "source_seconds": 14.4,
+      "output_seconds": 14.3687
+    },
+    {
+      "source_seconds": 15.0,
+      "output_seconds": 14.7913
+    },
+    {
+      "source_seconds": 15.8,
+      "output_seconds": 15.6366
+    },
+    {
+      "source_seconds": 17.2,
+      "output_seconds": 17.327
+    },
+    {
+      "source_seconds": 18.0,
+      "output_seconds": 18.1722
+    },
+    {
+      "source_seconds": 18.7,
+      "output_seconds": 18.5948
+    },
+    {
+      "source_seconds": 19.5,
+      "output_seconds": 19.44
+    },
+    {
+      "source_seconds": 20.0,
+      "output_seconds": 20.0
+    }
+  ]
+}
