@@ -1,8 +1,9 @@
-Embryo Explorer
+Embryo Explorer — human prenatal edition
+Original procedural geometry, interface and choreography created for this project.
+No Human Atlas or eMouse Atlas assets are included.
 
-Original procedural geometry, interface, animation, and camera choreography created for this project.
-The model is a simplified illustration of mammalian embryonic form, not a measured specimen or predictive simulation.
-The three forms are conceptual stages. Surface particles do not represent measured cells.
+Rendering: Three.js and OrbitControls, MIT license. See vendor/LICENSE.txt.
+Scientific references: UNSW Embryology; National Museum of Health and Medicine Carnegie staging table; ACOG prenatal growth guidance; human intestinal development MRI research (PMID 26599074) and fetal cortical folding research (PMID 38979235). Full source links and interpretation limits: anatomy-matrix.md.
+Scientific pages and papers were consulted as references. Their figures and meshes are not redistributed here.
 
-Three.js and OrbitControls: MIT License, Three.js authors.
-License: vendor/LICENSE.txt.
+This is an educational schematic illustration. It is not a clinical, diagnostic, predictive, or measured whole-body model and has not received specialist anatomical validation.

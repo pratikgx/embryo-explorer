@@ -1,25 +1,28 @@
-EMBRYO EXPLORER
+Embryo Explorer — human prenatal edition
 
-An original interactive 3D illustration on a white background.
+A buildless Three.js experience with sixteen representative stages, from fertilization to pregnancy week 40. The original smooth body surfaces are generated locally; internal anatomy is procedural JavaScript geometry. No Human Atlas or eMouse Atlas geometry, imagery, or interface is used.
 
-RUN LOCALLY
-From this folder, run:
-  python3 -m http.server 8000 --directory dist
-Then open http://localhost:8000 in a modern browser with WebGL.
-No accounts, API keys, or network requests are needed after loading the files.
+Run a static HTTP server in dist/, for example: python3 -m http.server 8873 --directory dist
+Open http://localhost:8873. ES modules require HTTP rather than file://.
 
-CONTROLS
-Drag to rotate; scroll to zoom. Select a structure to reveal it through the outer form. Isolate it for a close view. Toggle layers, separate tissues, switch to particles, or select one of three conceptual forms.
-Film plays the 55-second automated sequence. Export records a 1920 x 1080 WebM video in supported browsers. Use the resulting Download film link. The supplied MP4 is also ready to share.
+Controls: drag to orbit, scroll to zoom, use the stage selector, shortcut labels, or keyboard-accessible timeline. Choose an anatomical structure, isolate it, toggle visibility, or separate the structures. A structure absent in a new stage clears its selection. Extraembryonic cord/placenta context is optional.
 
-WHAT IT REPRESENTS
-The geometry is an original procedural illustration of mammalian embryonic form. The stages are conceptual, not exact developmental ages. Internal anatomy is simplified. The points are surface samples, not measured cells. No predictive simulation or experimental measurements are presented.
+The white environment responds gently to pointer movement and respects reduced-motion preferences. Touch does not activate pointer parallax. The 84-second journey can be paused and scrubbed; Exit film returns control to the explorer. Export records a 1920 × 1080 WebM using the browser's MediaRecorder. Export performance and format depend on the browser. The delivered MP4 is converted from the same recording.
 
-REGENERATE GEOMETRY (OPTIONAL)
-Install numpy, scipy, and scikit-image in a Python environment, then run:
-  python3 scripts/generate_geometry.py
-The shipped binary meshes are ready to use; regeneration is optional.
+Files:
+  dist/stages.js — source-supported stage metadata and descriptions
+  dist/models.js — original stage-specific anatomy
+  dist/prenatal/ — generated binary outer surfaces
+  dist/app.js — shared stage state, interaction, lighting, film, export
+  dist/anatomy-matrix.md — stage-by-stage sources and limitations
+  scripts/prenatal_geometry.py — body mesh generator
 
-CREDITS
-Original geometry, interface, and camera choreography created for this project.
-Three.js / OrbitControls: MIT, see dist/vendor/LICENSE.txt.
+Geometry regeneration requires numpy, scipy, and scikit-image:
+  python3 scripts/prenatal_geometry.py
+Optional integer arguments (5–15) rebuild selected surface indices.
+Binary layout: two little-endian uint32 values (vertex count, index count), followed by float32 XYZ vertex positions, then uint32 triangle indices.
+
+Science and scope:
+These are original schematic human anatomical illustrations, not scans, measured cell lineages, or validated clinical reconstructions. Dates, pose, tissue spacing, and transitions are approximate/illustrative. The early period uses days after fertilization; later labels use pregnancy weeks, approximately two weeks ahead. Reference lengths are approximate; the models are independently framed. Carnegie staging does not extend through fetal development. The brain folds, lung branching, heart/vessels, cartilage/bone, and bowel loops are simplified; microscopic anatomy and several organs are omitted. Specialist anatomical review remains outstanding.
+
+See dist/CREDITS.txt for attribution and VERIFICATION.md for checks and remaining limitations.
