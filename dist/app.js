@@ -1,9 +1,9 @@
 import * as T from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
-import {stages,systems,detail,ageBasis} from './stages.js?v=canvas3';
-import {buildStage} from './models.js?v=canvas3';
-import {createBoard} from './board.js?v=canvas3';
-import {planLayout} from './layout.js?v=canvas3';
+import {stages,systems,detail,ageBasis} from './stages.js?v=info4';
+import {buildStage} from './models.js?v=info4';
+import {createBoard} from './board.js?v=info4';
+import {planLayout} from './layout.js?v=info4';
 import {journeyAt,duration as journeyDuration} from './journey.js';
 const $=id=>document.getElementById(id),clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t;
 const ease=(a,b,x)=>{let t=clamp((x-a)/(b-a));return t*t*(3-2*t)};
@@ -23,7 +23,7 @@ const models=Array(stages.length),loads=new Map();
 const state={view:'assembled',hover:null,stage:8,selected:null,isolate:false,explode:0,hidden:new Set(),playing:false,paused:false,time:0};
 let actualTray=0,layout=null,hiddenBeforeParts=null,hiddenBeforeFilm=null;
 let currentCue=journeyAt(0);
-let board=null,boardMode='assembled',boardBeforeFilm=null;
+let board=null,boardMode='assembled',boardBeforeFilm=null,infoSelection=null;
 let actualExplode=0,cameraGoal=null,recording=false,recorder=null,chunks=[],lastTime=performance.now(),filmStart=0,requestId=0;
 let dragging=false,pointerTarget=new T.Vector2(),pointerActual=new T.Vector2();
 const identityRotation=new T.Quaternion();
@@ -108,7 +108,7 @@ $('explode').oninput=e=>{pauseForInput();if(state.view==='parts')setView('separa
 $('isolate').onclick=()=>{pauseForInput();state.isolate=!state.isolate;updateSelection();state.isolate?focusSelected():frameDefault()};
 $('clearSelection').onclick=()=>{if(state.view==='parts'){$('backToParts').click();return;}pauseForInput();state.selected=null;state.isolate=false;updateSelection();frameDefault()};
 function reset(){setAnatomyPanel(false);state.view='assembled';hiddenBeforeParts=null;actualTray=0;controls.enableRotate=true;controls.maxDistance=14;state.selected=null;state.isolate=false;state.explode=0;state.hidden=new Set();$('explode').value=0;$('explodeValue').textContent='0%';syncView();resize();refreshTray();updateLayers();frameDefault();}
-$('reset').onclick=()=>{pauseForInput();reset();boardMode='assembled';board?.reset()};$('sourceBtn').onclick=()=>$('sources').showModal();$('closeSources').onclick=()=>$('sources').close();$('sources').onclick=e=>{if(e.target===$('sources'))$('sources').close()};
+$('reset').onclick=()=>{pauseForInput();closeInfo(false);reset();boardMode='assembled';board?.reset()};$('sourceBtn').onclick=()=>$('sources').showModal();$('closeSources').onclick=()=>$('sources').close();$('sources').onclick=e=>{if(e.target===$('sources'))$('sources').close()};
 const ray=new T.Raycaster(),mouse=new T.Vector2();let down=[0,0];
 canvas.addEventListener('pointerdown',e=>{pauseForInput();dragging=true;down=[e.clientX,e.clientY];pointerTarget.set(0,0)});
 window.addEventListener('pointerup',()=>dragging=false);
@@ -214,7 +214,7 @@ $('play').onclick=()=>startFilm();$('record').onclick=()=>{if(!window.MediaRecor
 $('stopFilm').onclick=stopFilm;$('pauseFilm').onclick=()=>{state.paused=!state.paused;$('pauseFilm').textContent=state.paused?'Resume':'Pause';filmStart=performance.now()-state.time*1000};
 $('filmSeek').oninput=e=>{state.time=+e.target.value;state.paused=true;$('pauseFilm').textContent='Resume';filmStart=performance.now()-state.time*1000};
 window.addEventListener('keydown',e=>{
- if(e.key==='Escape'){if(state.playing)stopFilm();else if(document.body.dataset.inspector==='true')closeDetail();}
+ if(e.key==='Escape'){if(state.playing)stopFilm();else if(document.body.dataset.inspector==='true')closeDetail();else if(infoSelection)closeInfo();}
  if(e.key==='Tab'&&!state.playing&&document.body.dataset.inspector==='true'){
   const items=[...$('detailPanel').querySelectorAll('button,input,select,a[href],[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length);
   const first=items[0],last=items.at(-1);
@@ -227,17 +227,32 @@ function animate(now){requestAnimationFrame(animate);const dt=Math.min(.06,(now-
  else{if(cameraGoal){const alpha=reduce.matches?1:1-Math.exp(-dt*5);camera.position.lerp(cameraGoal.pos,alpha);controls.target.lerp(cameraGoal.target,alpha);if(camera.position.distanceTo(cameraGoal.pos)<.003)cameraGoal=null;}controls.update();pointerActual.lerp(reduce.matches?new T.Vector2():pointerTarget,1-Math.exp(-dt*3));root.rotation.set(pointerActual.y*.016,pointerActual.x*.025,0);key.position.x=3+pointerActual.x*.35;document.documentElement.style.setProperty('--px',pointerActual.x*18+'px');document.documentElement.style.setProperty('--py',pointerActual.y*12+'px');}
  if(state.playing||document.body.dataset.inspector==='true'){updateModel(dt);renderer.render(scene,camera);}if(state.playing){filmOverlay();if(state.time>=journeyDuration)stopFilm();}
 }
+function openInfo(i,part=null){
+ pauseForInput();infoSelection={i,part};const s=stages[i];
+ $('infoPanel').hidden=false;document.body.dataset.infoOpen='true';
+ $('infoAge').textContent=s.age+' · '+ageBasis(s);
+ $('infoName').textContent=part?systems[part][0]:s.name;
+ $('infoContext').textContent=part?s.name:'';$('infoContext').hidden=!part;
+ $('infoDescription').textContent=part?detail(part,i):s.note;
+ board?.select(i,true,part);$('infoName').focus({preventScroll:true});
+}
+function closeInfo(returnFocus=true){
+ const previous=infoSelection;infoSelection=null;$('infoPanel').hidden=true;document.body.dataset.infoOpen='false';
+ if(previous){board?.select(previous.i,false);if(returnFocus)board?.focus(previous.i);}
+}
+$('closeInfo').onclick=()=>closeInfo();
+$('inspectInfo').onclick=()=>{if(infoSelection)openDetail(infoSelection.i,infoSelection.part);};
 async function openDetail(i,part=null){
  pauseForInput();$('detailPanel').hidden=false;document.body.dataset.inspector='true';$('overview').inert=true;
  setView(boardMode,{manual:false});await setStage(i,{manual:false});board.select(i);resize();refreshTray();frameDefault();
- if(part)selectPart(part);$('closeDetail').focus({preventScroll:true});
+ if(part){selectPart(part);if(state.view!=='parts'){state.isolate=true;syncView();focusSelected();}}$('closeDetail').focus({preventScroll:true});
 }
-function closeDetail(){pauseForInput();$('detailPanel').hidden=true;document.body.dataset.inspector='false';$('overview').inert=false;board?.select(state.stage,false);board?.focus(state.stage);}
+function closeDetail(){pauseForInput();$('detailPanel').hidden=true;document.body.dataset.inspector='false';$('overview').inert=false;if(infoSelection){board?.select(infoSelection.i,true,infoSelection.part);$('inspectInfo').focus({preventScroll:true});}else{board?.select(state.stage,false);board?.focus(state.stage);}}
 $('closeDetail').onclick=closeDetail;
 const params=new URLSearchParams(location.search);const initial=params.has('stage')?clamp(Number(params.get('stage')),0,15):8;
 document.body.dataset.inspector='false';
 await setStage(initial,{manual:false});
-board=createBoard({ensure,directions,openStage:openDetail});
+board=createBoard({ensure,directions,openStage:openInfo});
 boardMode=['parts','separated'].includes(params.get('view'))?params.get('view'):'assembled';
 setView(boardMode,{manual:false});
 $('loading').hidden=true;resize();requestAnimationFrame(animate);document.body.dataset.ready='true';

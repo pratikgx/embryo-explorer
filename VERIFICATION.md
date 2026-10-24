@@ -1,3 +1,12 @@
+## Information first — October 24
+
+- Clicking a stage or structure now opens a non-modal information panel. All stages remain visible and interactive; there is no backdrop or automatic full-screen inspection.
+- All parts: selected Week 24 heart, confirmed stage-specific text and visible overview.
+- Assembled: keyboard-selected Week 40 and confirmed stage information without opening deeper inspection.
+- Separate: clicked the rendered Week 24 heart and confirmed geometric picking resolved Heart & circulation.
+- Explore in 3D opened the selected structure. Closing deeper inspection restored the information panel and overview selection.
+- Verified desktop side panel at 1280 × 720 and compact lower panel at 543 × 724, keeping the anatomy clear of the panel.
+
 ## Borderless anatomy field — October 24
 
 - Reviewed the supplied 38.6-second Human Atlas reference at four-second intervals, covering assembly, the spread of parts, selection, isolation, and system visibility. No reference geometry or visual assets were copied.

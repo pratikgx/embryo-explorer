@@ -40,3 +40,5 @@ Overview edition: stage previews use one shared offscreen renderer, rather than 
 Selected stages open in a centered focus view on white, with the overview and header hidden until closed. The first four overview dates use days after fertilization; all subsequent dates use pregnancy weeks, with additional days noted where needed.
 
 Borderless overview: all 16 stages share a white field with age labels. Names appear on hover/focus and full information remains in centered inspection. Drag an assembled or separated stage to turn it directly. All parts uses responsive spreads (five columns on wide displays, three on compact displays) with 113 semantic structure targets. Reset clears overview rotations. Shared meshes and one renderer supply the interactive previews.
+
+Information-first navigation: overview clicks open a non-modal information box while all stages remain visible. Rendered structures in Assembled and Separate are picked using their current preview camera; All parts retains direct structure targets. Explore in 3D is an explicit optional deeper view, and returning restores the information selection.

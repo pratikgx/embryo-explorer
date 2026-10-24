@@ -59,3 +59,25 @@ header{height:56px;padding:0 30px}.wordmark{font-size:15px}
 
 .board-heading{height:0}.board-heading h1{display:none}.board-heading .demo-actions{right:205px}
 @media(max-width:700px){.board-heading .demo-actions{right:180px}}
+
+/* Information opens beside the anatomy, without replacing the scene. */
+#infoPanel{position:fixed;z-index:8;right:26px;top:86px;width:270px;max-height:calc(100dvh - 180px);overflow:auto;padding:24px;background:#fff;border:1px solid #e9ede5;border-radius:14px;box-shadow:0 12px 40px #3e503c0d;animation:info-in .18s ease-out}
+#infoPanel[hidden]{display:none}#closeInfo{position:absolute;top:10px;right:12px;width:26px;height:26px;font-size:20px;color:#8d9984;padding:0}
+#infoAge{font-size:9px;color:#9ba592;margin:0 24px 14px 0;line-height:1.6}#infoName{font-size:20px;font-weight:500;line-height:1.2;letter-spacing:-.4px;color:#42543f;margin:0 0 10px;outline:none}
+#infoContext{font-size:10px;color:#8e9b85;margin:0 0 10px}#infoDescription{font-size:12px;line-height:1.7;color:#7b8973;margin:0 0 22px}
+#inspectInfo{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 13px;border-radius:7px;font-size:11px;background:#71836c;color:#fff}#inspectInfo:hover{background:#5e7258}
+body[data-info-open=true]:not([data-inspector=true]) #overview{right:326px}
+body[data-info-open=true]:not([data-inspector=true]) #boardToolbar{left:calc((100vw - 300px)/2)}
+body[data-inspector=true] #infoPanel,.filmMode #infoPanel{display:none}
+.stage-card[data-active=true] .stage-age{color:#3e633a;font-weight:600}
+.stage-card[data-active=true] .stage-preview img{filter:drop-shadow(0 5px 12px #7b9a5624)}
+.card-part[data-selected=true]{outline:1px solid #8ba27a77;outline-offset:-2px;background:#9cb3880c}
+@keyframes info-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){
+ #infoPanel{top:auto;bottom:94px;left:16px;right:16px;width:auto;max-height:184px;padding:16px 18px;display:grid;grid-template-columns:minmax(0,1fr) 124px;column-gap:20px;align-items:start}
+ #infoPanel[hidden]{display:none}#infoAge{grid-column:1;margin-bottom:5px;font-size:8px}#infoName{grid-column:1;font-size:17px;margin-bottom:6px}#infoContext{grid-column:1;margin-bottom:5px}#infoDescription{grid-column:1;font-size:10px;line-height:1.5;margin-bottom:0}#inspectInfo{grid-column:2;grid-row:2/span 3;align-self:center;margin-top:4px;font-size:10px;padding:10px}
+ body[data-info-open=true]:not([data-inspector=true]) #overview{right:12px;bottom:208px}
+ body[data-info-open=true]:not([data-inspector=true]) #boardToolbar{left:50%}
+}
+@media(max-width:420px){#infoPanel{left:10px;right:10px;grid-template-columns:minmax(0,1fr) 104px;column-gap:10px}body[data-info-open=true]:not([data-inspector=true]) #overview{left:5px;right:5px;bottom:222px}#infoDescription{font-size:9px}}
+@media(prefers-reduced-motion:reduce){#infoPanel{animation:none}}
