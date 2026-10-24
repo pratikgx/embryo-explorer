@@ -1,6 +1,20 @@
-# Verification — human prenatal edition
+# Verification — fetal sculpt and anatomy collection edition
 
-## Passed
+## Refinement checks
+
+- All 16 stages selected in All parts. Loaded anatomy, stage selector, slider and collection item counts matched: 3, 2, 2, 5, 5, 6, then 9 structures for each remaining stage. Captured and reviewed the complete contact sheet.
+- All nine later-stage structures activated by keyboard Enter, with the matching inspection title and description; each returned to the collection.
+- Isolated heart selection retained across Week 40 → Body folding, with the looping-tube description. Moving to Blastocyst cleared the absent selection and returned to the collection.
+- Timeline Home and ArrowRight selected stages 0 and 1. The stage selector remained usable in inspection and collection modes.
+- Compared pregnancy weeks 12, 24 and 40 from front, profile and three-quarter views, with a closer near-term inspection. Eyelid and mouth lines are sampled from the generated surface rather than floating geometry.
+- Corrected an invisible floor that still wrote depth and clipped the bottom collection row. Early disc-shaped tissues are tilted in the collection so their surfaces are visible.
+- All eleven outer surfaces have finite coordinates, valid indices, normalized normals, one connected component and distinct hashes. Eight regenerated fetal surfaces contain 84,806–92,213 vertices; their detail metadata is finite.
+- A physical touch-device and screen-reader audit was not performed. Click/tap targets and native keyboard buttons are implemented; desktop keyboard operation was checked.
+
+- Recorded the complete 90-second journey at 1920 × 1080, converted to H.264 MP4, and reviewed the contact sheet plus full-resolution near-term and collection frames. The updated sequence includes the collection and heart inspection at week 24.
+- Corrected stale-frame behavior during paused scrubbing and smoothed the camera transition into and out of the collection. The final capture reported saved; the browser reported no errors or warnings.
+
+## Earlier prenatal checks
 
 - All 16 stages selected in order through the live browser. The selected stage, slider value, loaded model and anatomy controls matched for every stop.
 - All 16 stages selected in reverse with separation at 100%; the loaded model and separation state remained synchronized.

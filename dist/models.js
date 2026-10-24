@@ -1,11 +1,12 @@
 import * as T from 'three';
 import {stages,systems} from './stages.js';
 const V=p=>new T.Vector3(...p), mix=(a,b,t)=>a+(b-a)*t;
-const sphere=new T.SphereGeometry(1,40,28);
+const sphere=new T.SphereGeometry(1,48,36);
+const bodyDetails={};
 function material(color){return new T.MeshPhysicalMaterial({color,roughness:.60,metalness:0,clearcoat:.04,clearcoatRoughness:.6,transparent:true,side:T.DoubleSide});}
 function add(part,geo,color,position=[0,0,0],scale=[1,1,1]){const m=new T.Mesh(geo,material(color||part.userData.color));m.position.set(...position);m.scale.set(...scale);m.castShadow=true;m.receiveShadow=true;part.add(m);return m;}
 function ell(p,c,r,col){return add(p,sphere,col,c,r)}
-function tube(p,points,r=.04,col){return add(p,new T.TubeGeometry(new T.CatmullRomCurve3(points.map(V)),Math.max(12,points.length*7),r,8,false),col)}
+function tube(p,points,r=.04,col){return add(p,new T.TubeGeometry(new T.CatmullRomCurve3(points.map(V)),Math.max(32,points.length*12),r,20,false),col)}
 function curve(p,points,r=.012,col){return tube(p,points,r,col)}
 function shell(p,radius,scale,center=[0,0,0],opacity=.3){let m=add(p,new T.SphereGeometry(radius,48,32,Math.PI*.05,Math.PI*1.7),null,center,scale);m.userData.opacity=opacity;return m;}
 function disc(p,y,col){return ell(p,[0,y,0],[.76,.085,.53],col)}
@@ -60,7 +61,7 @@ function skeleton(p,i){
  // Open cranial plates preserve gaps and do not obscure the entire brain.
  for(let s of [-1,1]){
   for(let j=0;j<7;j++){let y=.16-j*.071;curve(p,[[-.45,y,0],[-.32,y+.045,s*.24],[-.06,y+.03,s*.25],[.05,y-.01,s*.13]],.012,cartilage)}
-  const arm=[[-.12,.20,s*.31],[.30+.12*t,-.14+.13*t,s*.45],[.45,.25+.12*t,s*.36]],leg=[[-.22,-.66,s*.25],[.51+.08*t,-.46+.08*t,s*(.32+.05*t)],[.26,-1.04+.08*t,s*(.35+.03*t)]];
+  const arm=bodyDetails[i]?.arms[s===-1?0:1]||[[-.12,.20,s*.31],[.30+.12*t,-.14+.13*t,s*.45],[.45,.25+.12*t,s*.36]],leg=bodyDetails[i]?.legs[s===-1?0:1]||[[-.22,-.66,s*.25],[.51+.08*t,-.46+.08*t,s*(.32+.05*t)],[.26,-1.04+.08*t,s*(.35+.03*t)]];
   for(const pts of [arm,leg])for(let j=0;j<2;j++){
    tube(p,[pts[j],pts[j+1]],.032,cartilage);
    if(i>=8){const a=V(pts[j]),b=V(pts[j+1]),fraction=.15+.62*t;const from=a.clone().lerp(b,(1-fraction)/2),to=a.clone().lerp(b,(1+fraction)/2);tube(p,[from.toArray(),to.toArray()],.034,bone)}
@@ -77,8 +78,16 @@ function support(p,i){
  for(let j=0;j<6;j++){let a=j/6*Math.PI*2;curve(p,[[.97,.56,-.08],[.97+Math.cos(a)*.15,.57,-.08+Math.sin(a)*.15],[.97+Math.cos(a)*.28,.61,-.08+Math.sin(a)*.24]],.009,'#be8f88')}
 }
 async function body(p,i){
- const response=await fetch(`./prenatal/body-${i}.bin`);if(!response.ok)throw new Error(`Stage ${i+1} surface could not load`);
- const buf=await response.arrayBuffer(),h=new Uint32Array(buf,0,2),g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(new Float32Array(buf,8,h[0]*3),3));g.setIndex(new T.BufferAttribute(new Uint32Array(buf,8+h[0]*12,h[1]),1));const normalOffset=8+h[0]*12+h[1]*4;if(buf.byteLength>=normalOffset+h[0]*12)g.setAttribute('normal',new T.BufferAttribute(new Float32Array(buf,normalOffset,h[0]*3),3));else g.computeVertexNormals();const skin=add(p,g,i>=11?'#dcbaa7':'#e0bda8');skin.receiveShadow=false;
+ if(i>=8){const d=await fetch(`./prenatal/details-${i}.json`);if(d.ok)bodyDetails[i]=await d.json();}
+ const response=await fetch(`./prenatal/body-${i}.bin?v=soft2`);if(!response.ok)throw new Error(`Stage ${i+1} surface could not load`);
+ const buf=await response.arrayBuffer(),h=new Uint32Array(buf,0,2),g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(new Float32Array(buf,8,h[0]*3),3));g.setIndex(new T.BufferAttribute(new Uint32Array(buf,8+h[0]*12,h[1]),1));const normalOffset=8+h[0]*12+h[1]*4;if(buf.byteLength>=normalOffset+h[0]*12)g.setAttribute('normal',new T.BufferAttribute(new Float32Array(buf,normalOffset,h[0]*3),3));else g.computeVertexNormals();const skin=add(p,g,i>=8?'#ffffff':'#e0bda8');skin.receiveShadow=false;
+ if(i>=8){
+  const positions=g.attributes.position,colors=new Float32Array(positions.count*3),base=new T.Color('#e8c1ae'),blush=new T.Color('#d49c91'),c=new T.Color();
+  for(let j=0;j<positions.count;j++){const x=positions.getX(j),y=positions.getY(j),z=positions.getZ(j);const cheek=Math.exp(-((x-.4)**2/.045+(y-.66)**2/.025+(Math.abs(z)-.2)**2/.018));const extremity=Math.exp(-((x-.5)**2/.04+(y+.98)**2/.015));c.copy(base).lerp(blush,.28*cheek+.1*extremity);c.toArray(colors,j*3);}
+  g.setAttribute('color',new T.BufferAttribute(colors,3));skin.material.vertexColors=true;skin.material.roughness=.62;skin.material.clearcoat=.03;
+  const d=bodyDetails[i];if(d){for(const points of d.eyelids)curve(p,points,.0035,'#b99082');curve(p,d.mouth,.0035,'#bb8b82');}
+ }
+
  if(i>=6&&i<8){for(let s of [-1,1])ell(p,[.29,.86,s*.29],[.079,.079,.05],'#837f77')}
 }
 export async function buildStage(i){

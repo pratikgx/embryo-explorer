@@ -22,6 +22,61 @@ export const systems={
 };
 export function detail(key,i){
  const ga=stages[i].ga||0;
+ if(ga){
+  const period=ga<20?0:ga<28?1:ga<36?2:3;
+  const notes={
+   body:[stages[i].note+' The eyelids are shown resting closed.'],
+   neural:[
+    'The brain and spinal cord continue growing. The large cranial regions have a comparatively smooth surface at this stage.',
+    'The hemispheres expand. This model introduces shallow surface folds as pregnancy advances; they are illustrative, not a map of named grooves.',
+    'The growing brain develops stronger surface folds. Their increasing relief suggests maturation without reconstructing measured brain tissue.',
+    'The folded cerebral surface is more pronounced. Brain growth and organization continue after birth; this is a simplified outer view.'
+   ],
+   heart:[
+    'The chambered heart is growing with the fetus. Connections that route blood around the lungs remain part of prenatal circulation.',
+    'The heart grows within the expanding chest. The major vessels and fetal connections are shown schematically; this view does not simulate blood flow.',
+    'The larger fetal heart retains its prenatal connections. The placenta still supports gas exchange while the lungs develop.',
+    'The heart still has prenatal circulation. Birth-related changes have not happened: the illustrated atrial connection and ductus arteriosus remain present.'
+   ],
+   gut:[
+    'The intestinal loops are now shown inside the abdomen after their early return from the base of the cord. The stomach and bowel remain simplified.',
+    'The digestive tract grows within the abdomen. This view shows longer, more closely packed intestinal loops than the early fetal stage.',
+    'The expanding bowel is arranged in denser loops. Their exact paths are illustrative; this is not a measured intestinal reconstruction.',
+    'The digestive tract remains within the near-term abdomen. The packed loops show its broad arrangement, without microscopic tissue detail.'
+   ],
+   lungs:[
+    'Branching airways extend within the small developing lungs. The translucent envelopes reveal a simplified airway scaffold.',
+    'Airway and peripheral lung organization becomes more elaborate. Branches increase in this illustration; microscopic air spaces are not reconstructed.',
+    'Peripheral lung tissue continues developing. These lungs remain prenatal and fluid-filled; the visible branches are a schematic guide.',
+    'The lungs are still shown before the first breath. Their development continues beyond birth, and this model does not predict breathing readiness.'
+   ],
+   skeleton:[
+    'A cartilage framework supports the growing limbs. Selected shafts begin to appear mineralized; the complete skeleton is not reconstructed.',
+    'The limbs lengthen and selected mineralized shafts extend. Cartilage remains visible around the developing joints.',
+    'The growing framework shows longer mineralized regions within the limbs. Gaps remain between the simplified cranial plates.',
+    'The near-term framework remains a mixture of bone and cartilage. The skull plates are shown with gaps rather than as a fused shell.'
+   ],
+   liver:[
+    'The liver is prominent in the early fetal abdomen. Its broad form is shown alongside the returning intestinal loops.',
+    'The liver grows as the abdominal proportions change. The illustration adjusts its size relative to the surrounding body.',
+    'The liver remains a substantial abdominal organ while the torso fills out. Its internal vessels and microscopic tissue are omitted.',
+    'The liver is shown within the near-term abdominal arrangement. Its lobes are simplified, and no physiological activity is simulated.'
+   ],
+   kidneys:[
+    'Paired kidney regions appear behind the digestive tract. These simple forms show their broad position, not the full developing urinary system.',
+    'The paired kidneys grow with the abdomen. This schematic adjusts their size and relative position; internal collecting structures are omitted.',
+    'The kidney regions enlarge within the growing torso. Their smooth surfaces are illustrative and do not show microscopic maturation.',
+    'The near-term kidney regions remain paired behind the abdominal organs. The urinary tract and internal tissue are not reconstructed.'
+   ],
+   support:[
+    'The cord links the fetus to the developing placenta. The disc and connection are shown as optional context with illustrative placement.',
+    'The cord and placenta continue supporting exchange as the fetus grows. Their displayed size and spacing are simplified for readability.',
+    'The cord and placenta remain the supporting connection during fetal growth. This model shows their relationship, not placental microanatomy.',
+    'The cord and placenta remain connected before delivery. The scene ends before cord clamping or the transition to newborn circulation.'
+   ]
+  };
+  if(notes[key])return notes[key][key==='body'?0:period];
+ }
  if(key==='neural')return i===5?'Neural folds and an incompletely closing tube with cranial expansions.':i===6?'Expanding cranial vesicles and spinal tube; no adult cortical folds.':ga>=24?'Enlarging hemispheres with illustrative, progressively stronger surface folds. These are not named or measured sulci.':'Expanding brain regions and spinal cord. The cerebral surface remains comparatively smooth.';
  if(key==='heart')return i===5?'A simplified looping heart tube, without mature chambers.':i===6?'Looping and chamber formation, with a schematic outflow tract.':'Schematic chambered fetal heart and major vessels. The foramen ovale and ductus arteriosus remain represented; this is not a flow simulation.';
  if(key==='gut')return i===7?'Intestinal loops extend into the base of the cord during physiological herniation.':i>=8?'Intestinal loops lie within the abdomen, increasing in extent and packing as the fetus grows.':'A primitive gut tube and developing regional organization.';

@@ -3,14 +3,14 @@ Requires numpy, scipy, scikit-image. Ages and limitations are in anatomy-matrix.
 """
 import json, pathlib, struct, sys
 import numpy as np
-from scipy.ndimage import gaussian_filter
+from scipy.ndimage import gaussian_filter, map_coordinates
 from skimage.measure import marching_cubes
 
 OUT = pathlib.Path(__file__).resolve().parents[1] / 'dist' / 'prenatal'
 OUT.mkdir(exist_ok=True)
 lo=np.array([-1.4,-1.55,-1.0],dtype=np.float32)
 hi=np.array([1.5,1.95,1.0],dtype=np.float32)
-shape=np.array([144,176,104]); step=(hi-lo)/(shape-1)
+shape=np.array([216,264,152]); step=(hi-lo)/(shape-1)
 X,Y,Z=np.meshgrid(*[np.linspace(lo[i],hi[i],shape[i],dtype=np.float32) for i in range(3)],indexing='ij')
 
 def ell(c,r):
@@ -74,40 +74,73 @@ def embryo(stage):
 
 def fetus(ga):
     t=(ga-12)/28; fat=max(0,(ga-24)/16)
-    # Different proportions and posture as well as size: larger early head,
-    # extending trunk/limbs, later fat deposition and stronger fetal flexion.
-    h=1.14-.22*t
-    head=np.array([-.13,.95,0]); jaw=np.array([.16,.60,0])
-    f=ell(head,[.56*h,.62*h,.46*h])
-    for c,r,k in [([-.25,.43,0],[.28,.36,.27],.18),([-.34,-.13,0],[.31+.06*t+.05*fat,.66+.06*t,.30+.035*fat],.18),([-.08,-.40,0],[.32+.07*t+.05*fat,.43,.33+.045*fat],.18),([-.28,-.75,0],[.31,.25,.29],.12),(jaw,[.36,.33,.33],.16),([.39,.62,0],[.15,.17,.205],.07),([.48,.78,0],[.09,.095,.10],.065),([.40,.42,0],[.13,.11,.21],.08)]:
-        f=sm(f,ell(c,r),k)
-    for s in [-1,1]:
-        shoulder=[-.12,.20,s*(.31+.02*fat)]
-        elbow=[.30+.12*t,-.14+.13*t,s*(.45+.02*fat)]
-        wrist=[.45,.25+.12*t,s*.36]
-        palm=[.48,.34+.12*t,s*.31]
-        f=sm(f,path([shoulder,elbow,wrist,palm],[.11+.04*t+.025*fat,.085+.03*t+.02*fat,.06+.015*t+.018*fat,.09+.022*fat],.055),.11)
-        f=sm(f,ell(palm,[.13,.12,.075+.02*fat]),.04)
-        # Curled, individually resolved fingers; no adult-sized hands.
+    h=1.12-.18*t
+    f=ell([-.13,1.00,0],[.52*h,.53*h,.455*h])
+    # Continuous cranial, facial and body volumes; cheeks fill out later.
+    for c,r,k in [
+        ([-.24,.45,0],[.255,.32,.255],.16),
+        ([-.34,-.13,0],[.31+.06*t+.05*fat,.66+.06*t,.30+.035*fat],.18),
+        ([-.08,-.40,0],[.32+.07*t+.05*fat,.43,.33+.045*fat],.18),
+        ([-.28,-.75,0],[.31,.25,.29],.12),
+        ([.12,.72,0],[.30,.36,.32],.14),
+        ([.13,.91,0],[.29,.29,.325],.12),
+        ([.28,.48,0],[.19,.135,.22],.10),
+        ([.38,.79,0],[.095,.15,.085],.065),
+        ([.482,.731,0],[.078,.068,.087],.055),
+        ([.46,.593,0],[.065,.030,.105],.035),
+        ([.47,.557,0],[.064,.030,.10],.027),
+    ]: f=sm(f,ell(c,r),k)
+    arms=[]; legs=[]
+    for side in [-1,1]:
+        s=side
+        shoulder=[-.13,.22,s*(.31+.02*fat)]
+        elbow=[.33+.07*t, -.11 if s==1 else .02, s*(.45+.02*fat)]
+        wrist=[.43,.10 if s==1 else .31,s*.29]
+        palm=[.45,.18 if s==1 else .38,s*.245]
+        arms.append([shoulder,elbow,wrist])
+        f=sm(f,path([shoulder,elbow,wrist,palm],[.105+.035*t+.025*fat,.08+.025*t+.02*fat,.056+.015*t+.014*fat,.079+.017*fat],.055),.10)
+        f=sm(f,ell(palm,[.105,.095,.074+.012*fat]),.04)
         for j in range(4):
-            z=s*(.25+j*.043); y=palm[1]+.035
-            f=sm(f,path([[.48,y,z],[.57,y+.05,z],[.60,y-.015,z]],[.03+.004*fat,.027,.022],.017),.02)
-        f=sm(f,path([[.43,palm[1]-.04,s*.38],[.52,palm[1]-.07,s*.36]],[.043,.03]),.04)
-        hip=[-.22,-.66,s*.25]; knee=[.51+.08*t,-.46+.08*t,s*(.32+.05*t)]
-        ankle=[.26,-1.04+.08*t,s*(.35+.03*t)]
-        f=sm(f,path([hip,knee,ankle],[.15+.06*t+.035*fat,.12+.035*t+.025*fat,.085+.02*fat],.08),.12)
-        f=sm(f,ell([.40,-1.07+.08*t,s*(.36+.03*t)],[.24,.09+.02*fat,.12+.015*fat]),.06)
+            z=s*(.18+j*.043); y=palm[1]+.038
+            finger=[[.46,y,z],[.52,y+.07-(j-1.5)**2*.009,z],[.56,y+.065-(j-1.5)**2*.009,z],[.575,y+.025,z]]
+            f=sm(f,path(finger,[.026,.024,.022,.019],.009),.018)
+        f=sm(f,path([[.45,palm[1]-.03,s*.30],[.54,palm[1]-.015,s*.315],[.57,palm[1]+.022,s*.295]],[.034,.028,.022],.013),.027)
+        hip=[-.22,-.66,s*.25]; knee=[.51+.08*t,-.46+.08*t+(s==1)*.025,s*(.32+.05*t)]
+        ankle=[.26,-1.04+.08*t+(s==1)*.045,s*(.35+.03*t)]
+        legs.append([hip,knee,ankle])
+        f=sm(f,path([hip,knee,ankle],[.15+.06*t+.035*fat,.12+.035*t+.025*fat,.075+.02*fat],.075),.11)
+        fy=-1.065+.08*t+(s==1)*.045
+        f=sm(f,ell([.39,fy,s*(.35+.03*t)],[.21,.085+.02*fat,.116+.012*fat]),.055)
         for j in range(5):
-            f=sm(f,ell([.59-abs(j-1)*.014,-1.055+.08*t,s*(.27+j*.043)],[.065,.04,.027]),.016)
-        # Ear pinna integrated with scalp; inset eye regions.
-        f=sm(f,ell([-.03,.74,s*.425*h],[.105,.155,.055]),.03)
-        f=np.maximum(f,-ell([-.005,.76,s*.467*h],[.055,.09,.025]))
-        f=sm(f,ell([.25,.84,s*.18],[.17,.15,.15]),.09)
-        f=sm(f,ell([.29,.63,s*.18],[.16,.16,.16]),.09)
-        f=np.maximum(f,-ell([.424,.85,s*.18],[.037,.012,.072]))
-    # Quiet facial definition and umbilical depression.
-    f=np.maximum(f,-ell([.505,.505,0],[.035,.018,.105]))
-    f=np.maximum(f,-ell([.35,-.37,0],[.05,.055,.055]))
+            f=sm(f,ell([.57-abs(j-1)*.012,fy+.015,s*(.27+j*.043)],[.068-j*.006,.031-j*.002,.026-j*.002]),.011)
+        # Rounded cheek, closed lid mound and small pinna, blended into scalp.
+        f=sm(f,ell([.265,.652,s*.19],[.18+.025*fat,.155+.02*fat,.158]),.085)
+        f=sm(f,ell([.335,.847,s*.185],[.071,.060,.105]),.045)
+        earz=s*.421*h
+        f=sm(f,ell([-.055,.785,earz],[.077,.118,.043]),.035)
+        f=np.maximum(f,-ell([-.035,.792,earz+s*.030],[.040,.066,.023]))
+        f=sm(f,path([[-.055,.727,earz+s*.038],[-.087,.784,earz+s*.042],[-.065,.837,earz+s*.037]],[.014,.016,.014],.012),.018)
+        f=np.maximum(f,-ell([.535,.701,s*.037],[.016,.012,.018]))
+    # Subtle closed mouth and navel; no deep hollow facial cuts.
+    f=np.maximum(f,-ell([.529,.575,0],[.018,.007,.085]))
+    f=np.maximum(f,-ell([.35,-.37,0],[.025,.03,.028]))
+    # Place eyelid and mouth details directly on the implicit surface.
+    def front(y,z):
+        xs=np.linspace(.1,.7,100);points=np.array([(xs-lo[0])/step[0],np.full(100,(y-lo[1])/step[1]),np.full(100,(z-lo[2])/step[2])])
+        vals=map_coordinates(f,points,order=1);cross=np.where((vals[:-1]<0)&(vals[1:]>=0))[0]
+        if not len(cross): return .4
+        j=cross[-1];return float(xs[j]+(xs[j+1]-xs[j])*(-vals[j])/(vals[j+1]-vals[j]))
+    lids=[]
+    for side in [-1,1]:
+        pts=[]
+        for d in np.linspace(-.073,.073,15):
+            y=.834+.012*(d/.073)**2;z=side*.185+d;pts.append([front(y,z)+.001,y,z])
+        lids.append(pts)
+    lips=[]
+    for z in np.linspace(-.08,.08,17):
+        y=.576+.004*(z/.08)**2;lips.append([front(y,z)+.001,y,z])
+    meta=dict(eyelids=lids,mouth=lips,arms=arms,legs=legs)
+    (OUT/f'details-{8+int((ga-12)/4)}.json').write_text(json.dumps(meta))
     return f
 
 if __name__=='__main__':
