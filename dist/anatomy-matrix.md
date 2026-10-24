@@ -54,3 +54,7 @@ Original schematic human anatomy, based on published developmental descriptions.
 ## Source caveats
 
 UNSW mixes PF and GA tables on some pages, especially lung-stage summaries. Read each caption before assigning numeric boundaries. ACOG is a useful accessible overview, but some bullets compress long processes; avoid translating phrases such as organs being “done” into claims that development ends at birth. Original human specimen/MRI studies are the stronger basis for detailed shapes. Publicly viewable figures are not automatically reusable assets; no source imagery or mesh reuse is assumed here.
+
+## Guided journey and support visibility
+
+The 60-second sequence uses 16 stages and 18 explanations. Each caption is 10–18 words with at least three seconds of display time. Captions describe the selected stage or visible structure; stage progression, separation, and growth transitions remain illustrative. The cord and placenta appear by default from the first modeled support stage. The cord is anchored to each body mesh; its route and the small placental disc are presentation choices rather than measured anatomy. Placental support and prenatal circulation are described using [UNSW Placenta Development](https://embryology.med.unsw.edu.au/embryology/index.php/Placenta_Development), alongside the stage references above.

@@ -71,11 +71,18 @@ function skeleton(p,i){
   if(i>=8){const h=1.14-.22*t;let plate=add(p,new T.SphereGeometry(1,32,20,.2,2.6,.2,1.0),bone,[-.13,.95,s*.03],[.49*h,.55*h,.4*h]);plate.userData.opacity=.5;}
  }
 }
-function support(p,i){
- const early=i<=7;
- tube(p,[[early?.23:.34,-.4,0],[.66,-.49,.04],[.99,-.21,.1],[1.10,.14,.04],[.97,.49,-.07]],early?.045:.065);
- const disk=ell(p,[.98,.65,-.1],[.35,.10,.29]);disk.rotation.z=-.3;
- for(let j=0;j<6;j++){let a=j/6*Math.PI*2;curve(p,[[.97,.56,-.08],[.97+Math.cos(a)*.15,.57,-.08+Math.sin(a)*.15],[.97+Math.cos(a)*.28,.61,-.08+Math.sin(a)*.24]],.009,'#be8f88')}
+function support(p,i,bodyPart){
+ const early=i<=7,bellyY=i===7?-.44:-.37;
+ bodyPart.updateMatrixWorld(true);
+ const probe=new T.Raycaster(new T.Vector3(3,bellyY,0),new T.Vector3(-1,0,0));
+ const hit=probe.intersectObjects(bodyPart.children,true)[0];
+ if(!hit)throw new Error(`Cord attachment could not be located at stage ${i}`);
+ const anchor=hit.point.clone();anchor.x-=.025;
+ p.userData.attachment=anchor.clone();
+ const cx=early?1.16:1.30,cy=.59,cz=-.10;
+ tube(p,[anchor.toArray(),[anchor.x+.22,bellyY-.025,.035],[cx-.20,-.30,.10],[cx+.02,.12,.02],[cx,.52,cz]],early?.045:.055,'#bcb3ab');
+ const disk=ell(p,[cx,cy,cz],[early?.29:.32,.085,early?.24:.27],'#c2b9b3');disk.rotation.z=-.12;
+ for(let j=0;j<6;j++){let a=j/6*Math.PI*2;curve(p,[[cx,.518,cz],[cx+Math.cos(a)*.12,.52,cz+Math.sin(a)*.12],[cx+Math.cos(a)*.23,.56,cz+Math.sin(a)*.21]],.007,'#bfa29a');}
 }
 async function body(p,i){
  if(i>=8){const d=await fetch(`./prenatal/details-${i}.json`);if(d.ok)bodyDetails[i]=await d.json();}
@@ -116,7 +123,7 @@ export async function buildStage(i){
   else if(key==='lungs')lungs(p,i);
   else if(key==='skeleton')skeleton(p,i);
   else if(key==='kidneys'){for(let s of [-1,1]){const t=Math.max(0,(i-7)/8);const kidney=ell(p,[-.37,-.36+t*.09,s*.17],i===6?[.04,.13,.04]:[.06+.015*t,.10+.025*t,.045+.015*t]);kidney.rotation.z=s*.12;}}
-  else if(key==='support')support(p,i);
+  else if(key==='support')support(p,i,parts.body);
   p.userData.basePosition=p.position.clone();
   p.updateMatrixWorld(true);const box=new T.Box3().setFromObject(p);p.userData.center=box.getCenter(new T.Vector3());p.userData.size=box.getSize(new T.Vector3());
   p.traverse(o=>{if(o.isMesh){o.userData.key=key;o.userData.baseOpacity=o.userData.opacity??1;}});

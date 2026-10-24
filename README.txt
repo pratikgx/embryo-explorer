@@ -5,14 +5,15 @@ A buildless Three.js experience with sixteen representative stages, from fertili
 Run a static HTTP server in dist/, for example: python3 -m http.server 8873 --directory dist
 Open http://localhost:8873. ES modules require HTTP rather than file://.
 
-Controls: drag to orbit, scroll to zoom, use the stage selector, shortcut labels, or keyboard-accessible timeline. Choose an anatomical structure, isolate it, toggle visibility, or separate the structures. A structure absent in a new stage clears its selection. Extraembryonic cord/placenta context is optional. All parts opens an organized collection of the current stage’s structures. Select any item to inspect and rotate it, then return to the arrangement. Parts use adjusted display scales, explicitly labeled in the interface.
+Controls: drag to orbit, scroll to zoom, use the stage selector, shortcut labels, or keyboard-accessible timeline. Choose an anatomical structure, isolate it, toggle visibility, or separate the structures. A structure absent in a new stage clears its selection. Cord and placenta are visible by default wherever modeled. A visitor can hide them; that choice persists across stages and is restored after the guided journey. Reset restores visible defaults. All parts opens an organized collection of the current stage’s structures. Select any item to inspect and rotate it, then return to the arrangement. Parts use adjusted display scales, explicitly labeled in the interface.
 
-The white environment responds gently to pointer movement and respects reduced-motion preferences. Touch does not activate pointer parallax. The 90-second journey can be paused and scrubbed; Exit film returns control to the explorer. Export records a 1920 × 1080 WebM using the browser's MediaRecorder. Export performance and format depend on the browser. The delivered MP4 is converted from the same recording.
+The white environment responds gently to pointer movement and respects reduced-motion preferences. Touch does not activate pointer parallax. The 60-second journey can be paused and scrubbed; Exit film returns control to the explorer. Export records a 1920 × 1080 WebM using the browser's MediaRecorder. Export performance and format depend on the browser. The delivered MP4 is converted from the same recording.
 
 Files:
   dist/stages.js — source-supported stage metadata and descriptions
   dist/models.js — original stage-specific anatomy
   dist/prenatal/ — generated binary outer surfaces and surface-aligned facial/limb detail metadata
+  dist/journey.js — shared 60-second timing and stage/structure captions
   dist/layout.js — normalized, responsive anatomy collection layout
   dist/app.js — shared stage state, interaction, lighting, film, export
   dist/anatomy-matrix.md — stage-by-stage sources and limitations
@@ -29,3 +30,5 @@ These are original schematic human anatomical illustrations, not scans, measured
 See dist/CREDITS.txt for attribution and VERIFICATION.md for checks and remaining limitations.
 
 Refinement edition: fetal surfaces contain approximately 85,000–92,000 vertices with smooth field normals. The face, ears, fingers, toes and curled pose were resculpted; color is applied at vertices, with no low-resolution skin bitmap. Skin self-shadow reception is disabled to avoid shadow-map acne while the floor receives a restrained cast shadow. The flat lay uses separate soft contact shadows. All parts is demonstrated at pregnancy week 24 in the refreshed journey.
+
+Journey update: 16 developmental stages, 18 concise captions, and at least three seconds per explanation. The exported frame reserves a separate caption band below the anatomy. The guide shows its own layer configuration without overwriting manual visibility preferences. Cord attachments are sampled from the body surface at each supported stage; placental shape and positioning remain schematic.

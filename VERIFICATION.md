@@ -1,6 +1,18 @@
-# Verification — fetal sculpt and anatomy collection edition
+# Verification — 60-second guided journey edition
 
-## Refinement checks
+
+## Current update
+
+- Cord and placenta default to checked and rendered at all ten modeled support stages (Day 35 through Week 40). Captured and reviewed each stage for attachment and framing. The cord starts slightly inside a ray-sampled point on each body surface and terminates inside the simplified placental disc.
+- Hiding support at Week 40 remained hidden at Week 12. Starting the guide showed support in the late-stage shot; exiting restored the hidden choice. Reset restored checked and visible support.
+- The shared story module totals exactly 60 seconds over 16 stages. Its 18 caption windows each provide at least three seconds and contain 10–18 words. Automated checks verify time boundaries, caption lengths, and that every named inspection target exists at its stage.
+- Browser seek checks sampled every caption window. Stage metadata and timeline values agreed with the selected shot. The collection explanation and heart inspection each appeared in the intended Week 24 segment.
+- The 3D scene uses the upper 900 pixels of a 1920 × 1080 export; the bottom 180 pixels are reserved for one caption and the progress indicator. A screen-reader status mirrors the active explanation. Physical assistive-technology testing remains outstanding.
+- Manual visibility choices are held separately from guide visibility, including entry from the All parts view. The guide does not retain changes to a visitor’s hidden-layer set.
+
+- Reviewed the complete 60-second sequence through two-second frame samples plus full-resolution views. The refreshed H.264 export is 1920 × 1080 at 30 fps; all 1,800 frames decode successfully. Browser recording completed with no errors or warnings.
+
+## Previous refinement checks
 
 - All 16 stages selected in All parts. Loaded anatomy, stage selector, slider and collection item counts matched: 3, 2, 2, 5, 5, 6, then 9 structures for each remaining stage. Captured and reviewed the complete contact sheet.
 - All nine later-stage structures activated by keyboard Enter, with the matching inspection title and description; each returned to the collection.
