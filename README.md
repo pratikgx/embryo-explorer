@@ -20,7 +20,9 @@ Open http://localhost:8873. No build or package installation is needed. Three.js
 - `dist/CREDITS.txt`: asset and dependency attribution.
 - `VERIFICATION.md`: interaction checks and known limitations.
 - `README.txt`: implementation notes and earlier editions.
-- `media/`: existing 60-second guided journey in MP4 and WebM. This earlier film predates the current homepage navigation; the requested short walkthrough will be added after domain setup.
+- `media/embryo-explorer-walkthrough-20s.mp4`: current 1080p, 30 fps walkthrough.
+- `scripts/video/`: reproducible walkthrough capture driver and instructions.
+- `media/prenatal-journey-60s.*`: earlier guided journey in MP4 and WebM; predates the current homepage navigation.
 - `.openai/hosting.json`: Sites deployment identity and static directory configuration.
 
 ## Scientific scope
@@ -29,8 +31,8 @@ This depicts **human**, not mouse, development. The anatomy is schematic and ori
 
 ## Hosting
 
-Current public site: https://embryo-explorer-lumen.eigen-labs-4536.chatgpt.site/
+Original hosting URL: https://embryo-explorer-lumen.eigen-labs-4536.chatgpt.site/
 
-Requested custom domain: https://embryoexplorer.com/ (DNS setup in progress).
+Live custom domain: https://embryoexplorer.com/
 
 This repository is a private source backup. Pushing here does not automatically publish to Sites. The original project commit history is preserved.

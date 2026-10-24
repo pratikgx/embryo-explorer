@@ -3,7 +3,7 @@
 Domain: `embryoexplorer.com` (Namecheap).
 Site: `appgprj_6adc213e00648191bd94ded6eda01195`.
 
-Status at preparation: hosting registered; DNS edits and certificate validation pending.
+Status: all seven DNS records saved and verified. Root and www domains are active with active TLS certificates. Both were verified in the browser on October 24, 2026.
 
 In Namecheap Advanced DNS, replace the default root URL redirect and www parking CNAME with these host records. Keep unrelated mail records unchanged. Use Automatic TTL.
 
