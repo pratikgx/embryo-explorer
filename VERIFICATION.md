@@ -1,3 +1,15 @@
+## Continuous exploration — October 24
+
+- Initial view is pregnancy Week 16, assembled, regardless of legacy view query parameters.
+- One live renderer and the same semantic part meshes interpolate through Assembled (0), Separate (40), All parts (75), and Inspect (100). No overview thumbnails or inspection modal are used.
+- Verified slider movement to 100 without a target clamps at 75 with a prompt. Scrolling over the visible heart selects it for continuous zoom; further wheel input reaches 100 and shows its information.
+- Verified keyboard selection, return with retained camera target, reset, forward and reverse wheel input, and selected-structure information.
+- At All parts, checked all 16 stages: all represented structure bounds fit within the camera frustum. Inspect fit checked for the heart. Empty selection does not enter inspection.
+- Switching from heart inspection to Day 1 returns smoothly to 75 and clears the unavailable heart. Stage-specific text updates with selection.
+- Checked desktop 1280 × 720 and compact 543 × 724 layouts, including the lower information panel.
+- Pointer-based touch orbit and two-pointer pinch handlers are implemented. Physical touchscreen behavior has not been verified in this environment.
+- No console errors or warnings observed during browser checks. JavaScript syntax and diff whitespace checks passed.
+
 ## Information first — October 24
 
 - Clicking a stage or structure now opens a non-modal information panel. All stages remain visible and interactive; there is no backdrop or automatic full-screen inspection.
