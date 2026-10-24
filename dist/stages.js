@@ -4,7 +4,7 @@ export const stages = [
  {name:'Cleavage',age:'Day 3',pf:3,phase:'Cells',note:'More cells within a similar-sized envelope.',scale:'≈ 0.1–0.2 mm · conceptus diameter',parts:['zona','blastomeres']},
  {name:'Blastocyst',age:'Day 5',pf:5,phase:'Cells',note:'A fluid cavity and an inner cell mass emerge.',scale:'Microscopic · independently framed',parts:['trophoblast','inner']},
  {name:'Implantation',age:'Day 10',pf:10,phase:'Layers',note:'A two-layer disc between supporting cavities.',scale:'Microscopic · independently framed',parts:['epiblast','hypoblast','amnion','yolk','trophoblast']},
- {name:'Germ layers',age:'Day 17',pf:17,phase:'Layers',note:'Three germ layers establish the body’s organization.',scale:'Millimetre scale · independently framed',parts:['ectoderm','mesoderm','endoderm','axis','yolk']},
+ {name:'Germ layers',age:'Day 17',pf:17,phase:'Layers',note:'Three germ layers establish the body’s organization.',scale:'Submillimetre scale · independently framed',parts:['ectoderm','mesoderm','endoderm','axis','yolk']},
  {name:'Body folding',age:'Day 24',pf:24,phase:'Embryo',note:'The flat disc folds; the heart and neural tube take shape.',scale:'≈ 2–4 mm · crown–rump length',parts:['body','neural','heart','somites','gut','yolk']},
  {name:'Early organs',age:'Day 35',pf:35,phase:'Embryo',note:'Cranial regions expand and limb buds emerge.',scale:'≈ 7–9 mm · crown–rump length',parts:['body','neural','heart','somites','gut','liver','lungs','kidneys','support']},
  {name:'Late embryo',age:'Day 56',pf:56,phase:'Embryo',note:'Digits separate; the tail regresses. Bowel remains herniated.',scale:'≈ 27–31 mm · crown–rump length',parts:['body','neural','heart','gut','liver','lungs','skeleton','kidneys','support']},

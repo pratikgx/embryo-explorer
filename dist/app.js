@@ -119,7 +119,7 @@ function filmOverlay(){const s=stages[state.stage];ctx.fillStyle='#fff';ctx.fill
 async function startFilm(capture=false){
  $('loadText').textContent='Preparing the complete journey';$('loading').hidden=false;
  try{for(let i=0;i<16;i++)await ensure(i);}catch(e){$('loadText').textContent=e.message;return}
- $('loading').hidden=true;reset();cameraGoal=null;state.playing=true;state.paused=false;state.time=0;filmStart=performance.now();recording=capture;actualExplode=0;controls.enabled=false;pointerTarget.set(0,0);pointerActual.set(0,0);document.body.classList.add('filmMode');film.hidden=false;$('filmControls').hidden=false;$('pauseFilm').textContent='Pause';$('filmStatus').textContent=capture?'Recording 1080p':'';$('filmSeek').disabled=capture;$('pauseFilm').disabled=capture;resize();await setStage(0,{manual:false});
+ $('loading').hidden=true;reset();cameraGoal=null;state.playing=true;state.paused=false;state.time=0;transitionTime=-10;filmStart=performance.now();recording=capture;actualExplode=0;controls.enabled=false;pointerTarget.set(0,0);pointerActual.set(0,0);document.body.classList.add('filmMode');film.hidden=false;$('filmControls').hidden=false;$('pauseFilm').textContent='Pause';$('filmStatus').textContent=capture?'Recording 1080p':'';$('filmSeek').disabled=capture;$('pauseFilm').disabled=capture;resize();await setStage(0,{manual:false});
  if(capture){
   const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(m=>MediaRecorder.isTypeSupported(m));chunks=[];
   recorder=new MediaRecorder(film.captureStream(30),{mimeType:mime,videoBitsPerSecond:14000000});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};

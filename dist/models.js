@@ -78,7 +78,7 @@ function support(p,i){
 }
 async function body(p,i){
  const response=await fetch(`./prenatal/body-${i}.bin`);if(!response.ok)throw new Error(`Stage ${i+1} surface could not load`);
- const buf=await response.arrayBuffer(),h=new Uint32Array(buf,0,2),g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(new Float32Array(buf,8,h[0]*3),3));g.setIndex(new T.BufferAttribute(new Uint32Array(buf,8+h[0]*12,h[1]),1));g.computeVertexNormals();add(p,g,i>=11?'#dcbaa7':'#e0bda8');
+ const buf=await response.arrayBuffer(),h=new Uint32Array(buf,0,2),g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(new Float32Array(buf,8,h[0]*3),3));g.setIndex(new T.BufferAttribute(new Uint32Array(buf,8+h[0]*12,h[1]),1));const normalOffset=8+h[0]*12+h[1]*4;if(buf.byteLength>=normalOffset+h[0]*12)g.setAttribute('normal',new T.BufferAttribute(new Float32Array(buf,normalOffset,h[0]*3),3));else g.computeVertexNormals();add(p,g,i>=11?'#dcbaa7':'#e0bda8');
  if(i>=6&&i<8){for(let s of [-1,1])ell(p,[.29,.86,s*.29],[.079,.079,.05],'#837f77')}
 }
 export async function buildStage(i){

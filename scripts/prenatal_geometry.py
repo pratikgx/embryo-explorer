@@ -32,9 +32,14 @@ def path(ps,rs,k=.06):
 
 def save(field,name):
     field=gaussian_filter(field,.55)
-    v,f,_,_=marching_cubes(field,0,spacing=step,allow_degenerate=False)
+    v,f,normals,_=marching_cubes(field,0,spacing=step,allow_degenerate=False)
+    # Gradient normals avoid skinny-triangle shading artifacts from area averaging.
+    normals=normals/step
+    normals/=np.maximum(np.linalg.norm(normals,axis=1,keepdims=True),1e-8)
+    face_normals=np.cross(v[f[:,1]]-v[f[:,0]],v[f[:,2]]-v[f[:,0]])
+    if np.sum(face_normals*normals[f[:,0]])<0: normals=-normals
     v+=lo
-    (OUT/(name+'.bin')).write_bytes(struct.pack('<II',len(v),f.size)+v.astype('<f4').tobytes()+f.astype('<u4').tobytes())
+    (OUT/(name+'.bin')).write_bytes(struct.pack('<II',len(v),f.size)+v.astype('<f4').tobytes()+f.astype('<u4').tobytes()+normals.astype('<f4').tobytes())
     print(name,len(v),'vertices',flush=True)
 
 def embryo(stage):

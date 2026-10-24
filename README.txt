@@ -20,7 +20,7 @@ Files:
 Geometry regeneration requires numpy, scipy, and scikit-image:
   python3 scripts/prenatal_geometry.py
 Optional integer arguments (5–15) rebuild selected surface indices.
-Binary layout: two little-endian uint32 values (vertex count, index count), followed by float32 XYZ vertex positions, then uint32 triangle indices.
+Binary layout: two little-endian uint32 values (vertex count, index count), followed by float32 XYZ vertex positions, then uint32 triangle indices and float32 XYZ gradient normals.
 
 Science and scope:
 These are original schematic human anatomical illustrations, not scans, measured cell lineages, or validated clinical reconstructions. Dates, pose, tissue spacing, and transitions are approximate/illustrative. The early period uses days after fertilization; later labels use pregnancy weeks, approximately two weeks ahead. Reference lengths are approximate; the models are independently framed. Carnegie staging does not extend through fetal development. The brain folds, lung branching, heart/vessels, cartilage/bone, and bowel loops are simplified; microscopic anatomy and several organs are omitted. Specialist anatomical review remains outstanding.
