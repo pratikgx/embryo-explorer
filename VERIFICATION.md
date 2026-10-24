@@ -1,3 +1,12 @@
+## Restored all-stage home — October 24
+
+- The root URL loads all 16 stage previews, with days in the first row and pregnancy weeks afterward.
+- Verified every home preview loaded successfully, with no card borders.
+- Selected Week 24: explore.html?stage=11 opened that stage assembled at 0, then moved to All parts at 75 and inspected the heart at 100.
+- All stages returned to the 16-stage home with all preview images loaded.
+- The continuous exploration engine is retained; the home selection now supplies its starting stage.
+- JavaScript syntax and whitespace checks passed.
+
 ## Continuous exploration — October 24
 
 - Initial view is pregnancy Week 16, assembled, regardless of legacy view query parameters.

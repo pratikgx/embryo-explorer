@@ -4,3 +4,4 @@
 @media(prefers-reduced-motion:reduce){*{transition:none!important}.environment{transform:none}}
 
 button:disabled{opacity:.35;cursor:default}
+.back-home{font-size:11px;color:#748568;letter-spacing:0;align-self:center}.back-home:hover{color:#3d5734}@media(max-width:620px){header{padding:0 16px;font-size:13px}nav{gap:13px}nav button,.back-home{font-size:10px}}

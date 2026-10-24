@@ -5,12 +5,12 @@ import {planLayout} from './layout.js?v=info4';
 // The selected stage retains a separate, fully interactive 3D viewport.
 export function createBoard({ensure,directions,openStage}){
  const grid=document.getElementById('stageBoard'),status=document.getElementById('boardStatus');
- grid.innerHTML=stages.map((s,i)=>`<article class="stage-card" data-card="${i}"><button class="stage-preview" data-open="${i}" aria-label="Explore ${s.age}: ${s.name}" aria-expanded="false" aria-controls="infoPanel"><span class="stage-age">${s.age}<small>${ageBasis(s)}</small></span><img alt="${s.name}, original 3D illustration" draggable="false"><span class="stage-title">${s.name}<span aria-hidden="true">↗</span></span></button><p class="card-note">${s.note}</p><div class="card-parts" aria-label="${s.age} structures"></div></article>`).join('');
+ grid.innerHTML=stages.map((s,i)=>`<article class="stage-card" data-card="${i}"><button class="stage-preview" data-open="${i}" aria-label="Explore ${s.age}: ${s.name}" aria-expanded="false" aria-controls="stageBoard"><span class="stage-age">${s.age}<small>${ageBasis(s)}</small></span><img alt="${s.name}, original 3D illustration" draggable="false"><span class="stage-title">${s.name}<span aria-hidden="true">↗</span></span></button><p class="card-note">${s.note}</p><div class="card-parts" aria-label="${s.age} structures"></div></article>`).join('');
  grid.querySelectorAll('[data-open]').forEach(b=>{
   const i=+b.dataset.open;let drag=null,suppress=false,pending=null,busy=false;
   b.onclick=e=>{if(e.detail===0){suppress=false;openStage(i);return;}if(suppress){suppress=false;e.preventDefault();return;}openStage(i,pick(i,e));};
   b.onpointerenter=b.onfocus=()=>{status.textContent=stages[i].age+' · '+stages[i].name;};
-  b.onpointerleave=b.onblur=()=>{if(!drag)status.textContent=mode==='parts'?'Hover to identify · Click a part for information':'Drag a stage to turn · Click for information';};
+  b.onpointerleave=b.onblur=()=>{if(!drag)status.textContent=mode==='parts'?'Hover to identify · Click a part for information':'Drag to turn · Choose a stage to explore';};
   b.onpointerdown=e=>{if(e.button!==0||mode==='parts')return;suppress=false;const angle=angles.get(`${i}:${mode}`)||{yaw:.644,pitch:.06};drag={x:e.clientX,y:e.clientY,...angle};b.setPointerCapture(e.pointerId);};
   const draw=async()=>{if(busy||!pending)return;busy=true;const value=pending;pending=null;const currentMode=mode;try{const data=await preview(i,currentMode,value);if(mode===currentMode){b.querySelector('img').src=data.src;cache.delete(`${i}:${mode}:${grid.clientWidth<800}`);}}finally{busy=false;if(pending)requestAnimationFrame(draw);}};
   b.onpointermove=e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)<5&&!suppress)return;suppress=true;const value={yaw:drag.yaw-dx*.012,pitch:Math.max(-1.1,Math.min(1.1,drag.pitch+dy*.009))};angles.set(`${i}:${mode}`,value);b.dataset.turning='true';pending=value;requestAnimationFrame(draw);};
@@ -75,7 +75,7 @@ export function createBoard({ensure,directions,openStage}){
    });
    await new Promise(resolve=>requestAnimationFrame(resolve));
   }
-  status.textContent=view==='parts'?'Hover to identify · Click a part for information':'Drag a stage to turn · Click for information';document.body.dataset.boardReady='true';document.body.dataset.boardMode=mode;
+  status.textContent=view==='parts'?'Hover to identify · Click a part for information':'Drag to turn · Choose a stage to explore';document.body.dataset.boardReady='true';document.body.dataset.boardMode=mode;
  }
  function select(i,open=true,part=null){grid.querySelectorAll('[data-card]').forEach(c=>{c.dataset.active=String(open&&+c.dataset.card===i);c.querySelector('[data-open]').setAttribute('aria-expanded',String(open&&+c.dataset.card===i));c.querySelectorAll('.card-part').forEach(b=>b.dataset.selected=String(open&&+c.dataset.card===i&&b.dataset.key===part));});}
  return {setMode,select,reset:()=>{angles.clear();cache.clear();return setMode('assembled');},focus:i=>grid.querySelector(`[data-open="${i}"]`)?.focus()};
