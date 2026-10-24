@@ -15,4 +15,4 @@ Scientific pages and papers were consulted as references. Their figures and mesh
 
 This is an educational schematic illustration. It is not a clinical, diagnostic, predictive, or measured whole-body model and has not received specialist anatomical validation.
 
-Favicon: original vector illustration of a curled embryo, created for this project. SVG, PNG and ICO assets are covered by the project’s MIT license.
+Favicon: a sculpted embryo illustration generated with the built-in image-generation tool for this project, exported as PNG and ICO browser icons. Covered by the project’s MIT license.

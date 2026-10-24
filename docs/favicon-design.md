@@ -1,0 +1,11 @@
+# Favicon design
+
+Generated with the built-in image-generation tool, then resized for browser packaging. The final source is `media/favicon-source.png`. The original cartoon vector icon was replaced by a sculpted ivory embryo on a full sage background. Browser assets are `dist/favicon.png`, `dist/favicon-32.png`, `dist/favicon.ico`, and `dist/apple-touch-icon.png`.
+
+## Generation prompt
+
+Use case: stylized-concept. Asset type: premium favicon and app icon for Embryo Explorer, a calm educational 3D human prenatal anatomy website. Create a new single square icon, not a mockup or presentation sheet. A beautifully sculpted, simplified human embryo/fetus curled naturally in a compact C shape, viewed in gentle side profile, with a rounded head bowed toward tiny tucked limbs. Soft warm ivory ceramic / clay material, subtle peach undertones, smooth continuous surfaces and refined studio lighting. Peaceful and approachable, no scary medical realism. Tiny understated closed eyelid, no smile, no eyelashes, no blush, no heavy outline. The subject should occupy about 80 percent of the icon, centered on a muted medium sage-green rounded-square tile with generous corner rounding; outside the tile truly transparent. Strong silhouette and enough contrast to remain identifiable at 16 and 32 pixels. Make the curled body and head read immediately, with minimal fine detail. Soft sculptural depth and contact shading, quiet sophisticated design. No text, no letters, no watermark, no border, no umbilical cord, no womb, no diagram, no exposed internal anatomy, no glossy plastic, no emoji/cartoon line-art style.
+
+## Final refinement prompt
+
+Turn this into a fully opaque square favicon image. Keep the exact beautifully sculpted ivory embryo, pose, proportions, facial detail and lighting. Replace the entire background, tile, all corners and ALL exterior pixels with a continuous clean matte muted sage green background filling the full square edge to edge. NO transparency anywhere. NO rounded-square tile, NO border, NO black outside, NO bright green pixels or noise. The sage background can have very subtle studio shading behind the embryo, but must be a single continuous full-bleed surface. Enlarge the existing embryo slightly to occupy 85% of the square. This is a finished clean app icon, not a mockup. No lettering.
