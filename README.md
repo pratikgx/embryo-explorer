@@ -4,6 +4,12 @@ An interactive, illustrative human prenatal anatomy explorer with sixteen repres
 
 The home screen shows all sixteen stages. One continuous control moves from assembled anatomy to separation, all parts, a full-size stage, and an individual component. Hover and scroll or click to inspect; the systems panel controls selection and visibility.
 
+## Inspiration
+
+Inspired by [Ash (@ashebytes)](https://x.com/ashebytes) and her [Human Atlas](https://github.com/ashemag/human-atlas), whose fluid 3D anatomy exploration helped shape the navigation concept.
+
+Also inspired by [Yukon’s Virtual Embryo Challenge](https://yukon.org/virtualembryo), where researchers and AI agents collaborate on predictive models of embryonic development using the [Stanford Qiu Lab-led challenge](https://www.devo-evo.com/papers/virtual_embryo_challenge/)’s dataset of roughly one million mouse cells across 11 developmental time points.
+
 ## Run locally
 
 ```sh
@@ -35,4 +41,4 @@ Original hosting URL: https://embryo-explorer-lumen.eigen-labs-4536.chatgpt.site
 
 Live custom domain: https://embryoexplorer.com/
 
-This repository is a private source backup. Pushing here does not automatically publish to Sites. The original project commit history is preserved.
+This repository contains the source, assets and video walkthroughs for Embryo Explorer. Pushing here does not automatically publish to Sites. The original project commit history is preserved.

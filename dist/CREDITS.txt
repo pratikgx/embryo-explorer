@@ -1,5 +1,7 @@
 Embryo Explorer — human prenatal edition
 Original procedural geometry, interface and choreography created for this project.
+Interaction inspiration: Ash (@ashebytes), https://x.com/ashebytes, and Human Atlas, https://github.com/ashemag/human-atlas.
+Research inspiration: Yukon’s Virtual Embryo Challenge, https://yukon.org/virtualembryo — researchers and AI agents collaborating on predictive models of embryonic development. Challenge context: https://www.devo-evo.com/papers/virtual_embryo_challenge/.
 No Human Atlas or eMouse Atlas assets are included.
 
 Rendering: Three.js and OrbitControls, MIT license. See vendor/LICENSE.txt.
