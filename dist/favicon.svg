@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Embryo Explorer</title>
+  <defs>
+    <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#eef2e8"/><stop offset="1" stop-color="#dce5d3"/></linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7d9be"/><stop offset="1" stop-color="#dfa988"/></linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe8d0"/><stop offset="1" stop-color="#edbf9f"/></linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="20" fill="url(#bg)"/>
+  <path d="M33 30C22 29 15 37 17 46c2 10 13 13 22 8 6-3 10-9 7-13-2-3-7-2-9 1-2 4-5 6-8 4-4-3-2-7 3-8l7-2Z" fill="url(#skin)" stroke="#b98567" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M36 9c-8 0-13 6-12 14 1 7 6 12 13 12 5 0 8-3 9-6l3-1c1-1 1-2-1-3l-1-2c1-8-4-14-11-14Z" fill="url(#face)" stroke="#b98567" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M38 22q3 3 6 0" fill="none" stroke="#8a614e" stroke-width="1.8" stroke-linecap="round"/>
+  <ellipse cx="41" cy="27" rx="3" ry="1.8" fill="#df9a8a" opacity=".45"/>
+  <path d="M27 36c-1 5 3 7 7 5l5-4" fill="none" stroke="#b98567" stroke-width="6.6" stroke-linecap="round"/>
+  <path d="M27 35c-1 5 3 7 7 5l5-4" fill="none" stroke="#f1c9aa" stroke-width="5" stroke-linecap="round"/>
+  <path d="M27 50c4 2 9 0 12-4" fill="none" stroke="#bd8b6f" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M29 15c1-2 3-3 5-3" fill="none" stroke="#fff5e6" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+</svg>

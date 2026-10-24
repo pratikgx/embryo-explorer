@@ -40,7 +40,7 @@ The [anatomy matrix](dist/anatomy-matrix.md) lists stage-specific sources and li
 
 ## Credits and license
 
-Built by Pratik Gandhi with ChatGPT Astra. The geometry and interface were created for this project; Human Atlas inspired the interaction, and its models and imagery are not included.
+Built by Pratik Gandhi with ChatGPT Astra. The geometry, interface and embryo favicon were created for this project; Human Atlas inspired the interaction, and its models and imagery are not included.
 
 Demo music: [“Calm Ambient Science Medical Tech” by Musinova](https://pixabay.com/music/corporate-calm-ambient-science-medical-tech-362424/), used under the [Pixabay Content License](https://pixabay.com/service/license-summary/).
 
