@@ -1,3 +1,14 @@
+## Shared live home slider — October 24
+
+- All 16 live stages load at the root URL, with day labels first and pregnancy weeks afterward.
+- Checked shared slider at Assembled 0, Separate 50 and All parts 100. All 16 remain visible; the renderer reports all modeled bounds within their viewports at these positions.
+- All parts exposes 113 semantic structure targets. Clicking Week 24 Heart & circulation opens its stage-specific information while retaining the full overview.
+- Explore in 3D passes stage 11, progress 75 and the heart target. Verified the single-stage view reaches Inspect 100 with the correct information and framed anatomy.
+- All stages returns to the assembled home. Native wheel input changes shared home progress; Reset returns it to zero. No browser warnings or errors observed.
+- Restored pointer-responsive background movement, suppressed for touch, dragging and reduced-motion preference.
+- Visual checks at 1280 × 720. Physical touchscreen testing and a new compact-layout audit were not performed for this revision.
+- JavaScript syntax and whitespace checks passed. The downloadable film has not been rerecorded for this navigation change.
+
 ## Restored all-stage home — October 24
 
 - The root URL loads all 16 stage previews, with days in the first row and pregnancy weeks afterward.

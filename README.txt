@@ -1,3 +1,13 @@
+Current navigation — shared home exploration
+
+The root page opens all 16 stages together on a white, borderless canvas. One bottom slider and wheel input move every live stage through Assembled (0), Separate (50), and All parts (100). One shared WebGL renderer draws the same meshes throughout; there are no preview-image replacements. Each stage can be rotated by dragging.
+
+Click a stage or structure for a non-modal information box. All parts also exposes 113 keyboard-accessible structure targets. Explore in 3D opens the selected stage at the equivalent exploration position; a selected structure continues smoothly into inspection. The single-stage view retains Assembled → Separate → All parts → Inspect, orbiting, wheel input, stage selection and reset. All stages returns to the assembled 16-stage home. Home Reset restores assembled geometry and initial orientations.
+
+Current entry files: dist/index.html, home.js, home.css and home-directions.js for the overview; dist/explore.html, flow.js and flow.css for deeper exploration. Other interface notes below describe earlier editions. Models, scientific limitations and credits remain applicable. The existing video is an earlier guided presentation and does not demonstrate this new home interaction.
+
+--- Project background and earlier editions ---
+
 Embryo Explorer — human prenatal edition
 
 A buildless Three.js experience with sixteen representative stages, from fertilization to pregnancy week 40. The original smooth body surfaces are generated locally; internal anatomy is procedural JavaScript geometry. No Human Atlas or eMouse Atlas geometry, imagery, or interface is used.
