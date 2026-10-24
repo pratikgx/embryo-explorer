@@ -1,11 +1,11 @@
 import * as T from 'three';
-import {stages,systems} from './stages.js';
+import {stages,systems,ageBasis} from './stages.js?v=center2';
 import {planLayout} from './layout.js';
 // One offscreen renderer generates all cards from the actual stage meshes.
 // The selected stage retains a separate, fully interactive 3D viewport.
 export function createBoard({ensure,directions,openStage}){
  const grid=document.getElementById('stageBoard'),status=document.getElementById('boardStatus');
- grid.innerHTML=stages.map((s,i)=>`<article class="stage-card" data-card="${i}"><button class="stage-preview" data-open="${i}" aria-label="Explore ${s.age}: ${s.name}" aria-expanded="false"><span class="stage-age">${s.age}<small>${s.pf?'after fertilization':'of pregnancy'}</small></span><img alt="${s.name}, original 3D illustration" draggable="false"><span class="stage-title">${s.name}<span aria-hidden="true">↗</span></span></button><p class="card-note">${s.note}</p><div class="card-parts" aria-label="${s.age} structures"></div></article>`).join('');
+ grid.innerHTML=stages.map((s,i)=>`<article class="stage-card" data-card="${i}"><button class="stage-preview" data-open="${i}" aria-label="Explore ${s.age}: ${s.name}" aria-expanded="false"><span class="stage-age">${s.age}<small>${ageBasis(s)}</small></span><img alt="${s.name}, original 3D illustration" draggable="false"><span class="stage-title">${s.name}<span aria-hidden="true">↗</span></span></button><p class="card-note">${s.note}</p><div class="card-parts" aria-label="${s.age} structures"></div></article>`).join('');
  grid.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openStage(+b.dataset.open));
  function placeTargets(){
   grid.querySelectorAll('.stage-card').forEach(card=>{const img=card.querySelector('img'),layer=card.querySelector('.card-parts'),a=img.getBoundingClientRect(),b=card.getBoundingClientRect(),scale=Math.min(a.width/440,a.height/280);Object.assign(layer.style,{left:(a.left-b.left+(a.width-440*scale)/2)+'px',top:(a.top-b.top+(a.height-280*scale)/2)+'px',width:440*scale+'px',height:280*scale+'px',right:'auto',bottom:'auto'});});

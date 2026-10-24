@@ -1,8 +1,8 @@
 import * as T from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
-import {stages,systems,detail} from './stages.js?v=board1';
-import {buildStage} from './models.js?v=board1';
-import {createBoard} from './board.js?v=board1';
+import {stages,systems,detail,ageBasis} from './stages.js?v=center2';
+import {buildStage} from './models.js?v=center2';
+import {createBoard} from './board.js?v=center2';
 import {planLayout} from './layout.js';
 import {journeyAt,duration as journeyDuration} from './journey.js';
 const $=id=>document.getElementById(id),clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t;
@@ -89,8 +89,8 @@ async function setStage(value,{manual=true}={}){
  const ticket=++requestId;state.stage=i;if(manual)board?.select(i,document.body.dataset.inspector==='true');
  if(!stages[i].parts.includes(state.selected)){state.selected=null;state.isolate=false;}
  $('stageSlider').value=i;$('stageSelect').value=i;$('previous').disabled=i===0;$('next').disabled=i===stages.length-1;
- const s=stages[i];$('phase').textContent=`Human development · ${s.phase}`;$('stageName').textContent=s.name;$('stageNote').textContent=s.note;$('ageLabel').textContent=s.age;$('dating').textContent=s.pf?'After fertilization':'Pregnancy age';$('scaleText').textContent=s.scale;
- $('stageSlider').setAttribute('aria-valuetext',`${s.name}, ${s.age} ${s.pf?'after fertilization':'of pregnancy'}`);
+ const s=stages[i];$('phase').textContent=`Human development · ${s.phase}`;$('stageName').textContent=s.name;$('stageNote').textContent=s.note;$('ageLabel').textContent=s.age;$('dating').textContent=ageBasis(s);$('scaleText').textContent=s.scale;
+ $('stageSlider').setAttribute('aria-valuetext',`${s.name}, ${s.age} ${ageBasis(s)}`);
  document.querySelectorAll('[data-stage]').forEach(b=>b.setAttribute('aria-current',+b.dataset.stage===i));
  updateLayers();resize();if(state.view==='parts')controls.enableRotate=state.isolate;document.body.dataset.stage=String(i);document.body.dataset.modelReady='false';
  models.forEach(m=>{if(m)m.visible=false});
@@ -99,7 +99,7 @@ async function setStage(value,{manual=true}={}){
 }
 function focusSelected(){const p=models[state.stage]?.userData.parts[state.selected];if(!p)return;if(state.view==='parts'){const item=layout.entries[state.selected];const d=Math.max(2.5,item.extent.length()*1.9);cameraGoal={target:item.slot.clone(),pos:item.slot.clone().add(new T.Vector3(.15,.15,d))};return;}const c=p.userData.center.clone().add(p.position);const d=Math.max(2.5,p.userData.size.length()*2);cameraGoal={target:c,pos:c.clone().add(new T.Vector3(d*.5,.2,d*.86))};}
 $('stageSelect').innerHTML=stages.map((s,i)=>`<option value="${i}">${s.age} · ${s.name}</option>`).join('');
-$('stageTicks').innerHTML=stages.map((s,i)=>`<button data-stage="${i}" aria-label="${s.name}, ${s.age}" title="${s.name} · ${s.pf?'after fertilization':'pregnancy age'}">${s.pf?'d'+s.pf:'w'+s.ga}</button>`).join('');
+$('stageTicks').innerHTML=stages.map((s,i)=>`<button data-stage="${i}" aria-label="${s.name}, ${s.age}" title="${s.name} · ${ageBasis(s)}">${s.pregnancyWeeks?'w'+s.pregnancyWeeks:s.pf?'d'+s.pf:'w'+s.ga}</button>`).join('');
 $('stageSlider').max=stages.length-1;
 $('stageSlider').oninput=e=>setStage(e.target.value);$('stageSelect').onchange=e=>setStage(e.target.value);
 $('previous').onclick=()=>setStage(state.stage-1);$('next').onclick=()=>setStage(state.stage+1);
@@ -186,7 +186,7 @@ function filmOverlay(){
  const blend=state.paused?1:ease(0,.35,state.time-transitionTime);
  if(blend<1){ctx.globalAlpha=1-blend;ctx.drawImage(previousFrame,0,0);ctx.globalAlpha=blend;}
  ctx.drawImage(canvas,0,0,1920,1080);ctx.globalAlpha=1;
- text(s.age,86,94,32,'#4a5f51');text(s.pf?'after fertilization':'of pregnancy',86,122,15,'#9aa59d');text(s.name,86,168,21,'#819084');
+ text(s.age,86,94,32,'#4a5f51');text(ageBasis(s),86,122,15,'#9aa59d');text(s.name,86,168,21,'#819084');
  if(state.view==='parts'&&!state.selected&&layout){for(const [k,item] of Object.entries(layout.entries)){const v=root.localToWorld(item.label.clone()).project(camera);text(systems[k][0],(v.x*.5+.5)*1920,(-v.y*.5+.5)*900,16,'#77887a','center');}}
  // One caption at a time, in a reserved band below the 3D scene.
  ctx.fillStyle='#fff';ctx.fillRect(0,900,1920,180);
@@ -213,18 +213,26 @@ function stopFilm(){if(!state.playing)return;restoreCleavage();state.playing=fal
 $('play').onclick=()=>startFilm();$('record').onclick=()=>{if(!window.MediaRecorder){$('record').textContent='Export unavailable';return}startFilm(true)};
 $('stopFilm').onclick=stopFilm;$('pauseFilm').onclick=()=>{state.paused=!state.paused;$('pauseFilm').textContent=state.paused?'Resume':'Pause';filmStart=performance.now()-state.time*1000};
 $('filmSeek').oninput=e=>{state.time=+e.target.value;state.paused=true;$('pauseFilm').textContent='Resume';filmStart=performance.now()-state.time*1000};
-window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(state.playing)stopFilm();else if(document.body.dataset.inspector==='true')closeDetail()}});
+window.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){if(state.playing)stopFilm();else if(document.body.dataset.inspector==='true')closeDetail();}
+ if(e.key==='Tab'&&!state.playing&&document.body.dataset.inspector==='true'){
+  const items=[...$('detailPanel').querySelectorAll('button,input,select,a[href],[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length);
+  const first=items[0],last=items.at(-1);
+  if(e.shiftKey&&(document.activeElement===first||!$('detailPanel').contains(document.activeElement))){e.preventDefault();last?.focus();}
+  else if(!e.shiftKey&&(document.activeElement===last||!$('detailPanel').contains(document.activeElement))){e.preventDefault();first?.focus();}
+ }
+});
 function animate(now){requestAnimationFrame(animate);const dt=Math.min(.06,(now-lastTime)/1000);lastTime=now;
  if(state.playing){if(!state.paused)state.time=clamp((now-filmStart)/1000,0,journeyDuration);choreograph(state.time);$('filmSeek').value=state.time;$('filmSeek').setAttribute('aria-valuetext',`${Math.floor(state.time)} of ${journeyDuration} seconds`);$('filmTime').textContent=`${Math.floor(state.time/60)}:${String(Math.floor(state.time%60)).padStart(2,'0')}`;}
  else{if(cameraGoal){const alpha=reduce.matches?1:1-Math.exp(-dt*5);camera.position.lerp(cameraGoal.pos,alpha);controls.target.lerp(cameraGoal.target,alpha);if(camera.position.distanceTo(cameraGoal.pos)<.003)cameraGoal=null;}controls.update();pointerActual.lerp(reduce.matches?new T.Vector2():pointerTarget,1-Math.exp(-dt*3));root.rotation.set(pointerActual.y*.016,pointerActual.x*.025,0);key.position.x=3+pointerActual.x*.35;document.documentElement.style.setProperty('--px',pointerActual.x*18+'px');document.documentElement.style.setProperty('--py',pointerActual.y*12+'px');}
  if(state.playing||document.body.dataset.inspector==='true'){updateModel(dt);renderer.render(scene,camera);}if(state.playing){filmOverlay();if(state.time>=journeyDuration)stopFilm();}
 }
 async function openDetail(i,part=null){
- pauseForInput();$('detailPanel').hidden=false;document.body.dataset.inspector='true';
+ pauseForInput();$('detailPanel').hidden=false;document.body.dataset.inspector='true';$('overview').inert=true;
  setView(boardMode,{manual:false});await setStage(i,{manual:false});board.select(i);resize();refreshTray();frameDefault();
  if(part)selectPart(part);$('closeDetail').focus({preventScroll:true});
 }
-function closeDetail(){pauseForInput();$('detailPanel').hidden=true;document.body.dataset.inspector='false';board?.select(state.stage,false);board?.focus(state.stage);}
+function closeDetail(){pauseForInput();$('detailPanel').hidden=true;document.body.dataset.inspector='false';$('overview').inert=false;board?.select(state.stage,false);board?.focus(state.stage);}
 $('closeDetail').onclick=closeDetail;
 const params=new URLSearchParams(location.search);const initial=params.has('stage')?clamp(Number(params.get('stage')),0,15):8;
 document.body.dataset.inspector='false';

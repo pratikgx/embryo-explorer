@@ -4,10 +4,10 @@ export const stages = [
  {name:'Cleavage',age:'Day 3',pf:3,phase:'Cells',note:'More cells within a similar-sized envelope.',scale:'≈ 0.1–0.2 mm · conceptus diameter',parts:['zona','blastomeres']},
  {name:'Blastocyst',age:'Day 5',pf:5,phase:'Cells',note:'A fluid cavity and an inner cell mass emerge.',scale:'Microscopic · independently framed',parts:['trophoblast','inner']},
  {name:'Implantation',age:'Day 10',pf:10,phase:'Layers',note:'A two-layer disc between supporting cavities.',scale:'Microscopic · independently framed',parts:['epiblast','hypoblast','amnion','yolk','trophoblast']},
- {name:'Germ layers',age:'Day 17',pf:17,phase:'Layers',note:'Three germ layers establish the body’s organization.',scale:'Submillimetre scale · independently framed',parts:['ectoderm','mesoderm','endoderm','axis','yolk']},
- {name:'Body folding',age:'Day 24',pf:24,phase:'Embryo',note:'The flat disc folds; the heart and neural tube take shape.',scale:'≈ 2–4 mm · crown–rump length',parts:['body','neural','heart','somites','gut','yolk']},
- {name:'Early organs',age:'Day 35',pf:35,phase:'Embryo',note:'Cranial regions expand and limb buds emerge.',scale:'≈ 7–9 mm · crown–rump length',parts:['body','neural','heart','somites','gut','liver','lungs','kidneys','support']},
- {name:'Late embryo',age:'Day 56',pf:56,phase:'Embryo',note:'Digits separate; the tail regresses. Bowel remains herniated.',scale:'≈ 27–31 mm · crown–rump length',parts:['body','neural','heart','gut','liver','lungs','skeleton','kidneys','support']},
+ {name:'Germ layers',age:'Week 4',pregnancyWeeks:4,pf:17,phase:'Layers',note:'Three germ layers establish the body’s organization.',scale:'Submillimetre scale · independently framed',parts:['ectoderm','mesoderm','endoderm','axis','yolk']},
+ {name:'Body folding',age:'Week 5',pregnancyWeeks:5,pf:24,phase:'Embryo',note:'The flat disc folds; the heart and neural tube take shape.',scale:'≈ 2–4 mm · crown–rump length',parts:['body','neural','heart','somites','gut','yolk']},
+ {name:'Early organs',age:'Week 7',pregnancyWeeks:7,pf:35,phase:'Embryo',note:'Cranial regions expand and limb buds emerge.',scale:'≈ 7–9 mm · crown–rump length',parts:['body','neural','heart','somites','gut','liver','lungs','kidneys','support']},
+ {name:'Late embryo',age:'Week 10',pregnancyWeeks:10,pf:56,phase:'Embryo',note:'Digits separate; the tail regresses. Bowel remains herniated.',scale:'≈ 27–31 mm · crown–rump length',parts:['body','neural','heart','gut','liver','lungs','skeleton','kidneys','support']},
  {name:'Early fetus',age:'Week 12',ga:12,phase:'Fetus',note:'A large head and defined limbs; bowel returns to the abdomen.',scale:'≈ 5–6 cm · crown–rump length',parts:['body','neural','heart','gut','liver','lungs','skeleton','kidneys','support']},
  {name:'Growing limbs',age:'Week 16',ga:16,phase:'Fetus',note:'The neck and limbs lengthen; cartilage begins to mineralize.',scale:'≈ 11–12 cm · crown–rump length',parts:['body','neural','heart','gut','liver','lungs','skeleton','kidneys','support']},
  {name:'Changing proportions',age:'Week 20',ga:20,phase:'Fetus',note:'A slender body, recognizable face, and growing brain.',scale:'≈ 25 cm · crown–heel length',parts:['body','neural','heart','gut','liver','lungs','skeleton','kidneys','support']},
@@ -83,4 +83,10 @@ export function detail(key,i){
  if(key==='lungs')return i===6?'Small paired respiratory buds and early branching.':ga>=24?'Increasingly elaborate prenatal airways and peripheral tissue. The lungs are fluid-filled; microanatomy is not reconstructed.':'A branching conducting-airway scaffold and simplified developing lung envelopes.';
  if(key==='skeleton')return ga>=24?'A growing cartilage framework with selected mineralized shafts. Skull gaps remain; this is not a complete skeleton.':'A predominantly cartilaginous framework with limited illustrative ossification centers.';
  return systems[key][2];
+}
+
+// Display pregnancy age from row two without changing the anatomical snapshot.
+export function ageBasis(s){
+ if(s.pregnancyWeeks){const days=(s.pf+14)%7;return 'of pregnancy'+(days?' · +'+days+' days':'');}
+ return s.pf?'after fertilization':'of pregnancy';
 }

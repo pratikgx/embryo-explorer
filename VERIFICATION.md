@@ -1,3 +1,11 @@
+## Centered stage inspection and date labels — October 24
+
+- First four cards retain Day 1, 3, 5, 10 after fertilization. Row two displays pregnancy Week 4 (+3 days), Week 5 (+3 days), Week 7, Week 10; later rows remain pregnancy weeks. Underlying snapshot dates and geometry are unchanged.
+- At 1280 × 720 the inspection panel is centered at (640, 360). Header, overview, and decorative environment are hidden while open.
+- Checked the centered view in the compact 543px preview, including stage notes and date precision.
+- All parts selection displays the selected structure and its explanation. Escape and the close button restore the overview, mode, and focus. Shift+Tab from Close stays inside the inspection view.
+- JavaScript syntax and whitespace checks passed. No browser warnings or errors observed.
+
 # Verification — complete development overview
 
 
