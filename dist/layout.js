@@ -1,7 +1,7 @@
 import * as T from 'three';
 // Arrange semantic systems rather than individual mesh fragments. Scale is a display choice.
-export function planLayout(parts,keys,aspect=1.4){
- const columns=keys.length<=3?keys.length:(aspect<.85?2:3),rows=Math.ceil(keys.length/columns);
+export function planLayout(parts,keys,aspect=1.4,columnCount=null){
+ const columns=columnCount|| (keys.length<=3?keys.length:(aspect<.85?2:3)),rows=Math.ceil(keys.length/columns);
  const cellW=2.1,cellH=1.95,width=columns*cellW,height=rows*cellH;
  const entries={};
  keys.forEach((key,j)=>{

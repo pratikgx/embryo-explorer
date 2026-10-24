@@ -1,3 +1,13 @@
+## Borderless anatomy field — October 24
+
+- Reviewed the supplied 38.6-second Human Atlas reference at four-second intervals, covering assembly, the spread of parts, selection, isolation, and system visibility. No reference geometry or visual assets were copied.
+- Removed card surfaces and overview paragraphs. Retained small age labels and contextual names on hover/focus. Days remain in the first row, pregnancy weeks afterward.
+- Verified all 16 loaded stage previews in Assembled, Separate, and All parts; All parts contains 113 direct structure targets.
+- Dragging a stage changes its rendered orientation without opening inspection. Reset clears stored orientations. Click and keyboard activation still open inspection.
+- Confirmed Week 24 heart selection, its stage-specific information, and return to the overview.
+- Checked compact 543 × 724 layout: no bordered stage containers or off-screen stages. Header actions and bottom mode controls remain separate.
+- Syntax checks and diff whitespace checks passed; no browser warnings or errors observed.
+
 ## Centered stage inspection and date labels — October 24
 
 - First four cards retain Day 1, 3, 5, 10 after fertilization. Row two displays pregnancy Week 4 (+3 days), Week 5 (+3 days), Week 7, Week 10; later rows remain pregnancy weeks. Underlying snapshot dates and geometry are unchanged.

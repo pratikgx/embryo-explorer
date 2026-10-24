@@ -1,9 +1,9 @@
 import * as T from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
-import {stages,systems,detail,ageBasis} from './stages.js?v=center2';
-import {buildStage} from './models.js?v=center2';
-import {createBoard} from './board.js?v=center2';
-import {planLayout} from './layout.js';
+import {stages,systems,detail,ageBasis} from './stages.js?v=canvas3';
+import {buildStage} from './models.js?v=canvas3';
+import {createBoard} from './board.js?v=canvas3';
+import {planLayout} from './layout.js?v=canvas3';
 import {journeyAt,duration as journeyDuration} from './journey.js';
 const $=id=>document.getElementById(id),clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t;
 const ease=(a,b,x)=>{let t=clamp((x-a)/(b-a));return t*t*(3-2*t)};
@@ -108,7 +108,7 @@ $('explode').oninput=e=>{pauseForInput();if(state.view==='parts')setView('separa
 $('isolate').onclick=()=>{pauseForInput();state.isolate=!state.isolate;updateSelection();state.isolate?focusSelected():frameDefault()};
 $('clearSelection').onclick=()=>{if(state.view==='parts'){$('backToParts').click();return;}pauseForInput();state.selected=null;state.isolate=false;updateSelection();frameDefault()};
 function reset(){setAnatomyPanel(false);state.view='assembled';hiddenBeforeParts=null;actualTray=0;controls.enableRotate=true;controls.maxDistance=14;state.selected=null;state.isolate=false;state.explode=0;state.hidden=new Set();$('explode').value=0;$('explodeValue').textContent='0%';syncView();resize();refreshTray();updateLayers();frameDefault();}
-$('reset').onclick=()=>{pauseForInput();reset();boardMode='assembled';board?.setMode(boardMode)};$('sourceBtn').onclick=()=>$('sources').showModal();$('closeSources').onclick=()=>$('sources').close();$('sources').onclick=e=>{if(e.target===$('sources'))$('sources').close()};
+$('reset').onclick=()=>{pauseForInput();reset();boardMode='assembled';board?.reset()};$('sourceBtn').onclick=()=>$('sources').showModal();$('closeSources').onclick=()=>$('sources').close();$('sources').onclick=e=>{if(e.target===$('sources'))$('sources').close()};
 const ray=new T.Raycaster(),mouse=new T.Vector2();let down=[0,0];
 canvas.addEventListener('pointerdown',e=>{pauseForInput();dragging=true;down=[e.clientX,e.clientY];pointerTarget.set(0,0)});
 window.addEventListener('pointerup',()=>dragging=false);
