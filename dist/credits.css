@@ -1,0 +1,13 @@
+/* Reserve a quiet footer row beneath the anatomy controls. */
+.site-credits{position:fixed;z-index:8;left:12px;right:12px;bottom:max(7px,env(safe-area-inset-bottom));min-height:25px;display:flex;align-items:center;justify-content:center;gap:22px;font-size:12px;line-height:1.5;color:#818581;white-space:nowrap}
+.site-credits a{color:#424842;text-decoration:underline;text-decoration-color:#a7aca6;text-underline-offset:4px;text-decoration-thickness:1px}
+.site-credits a:hover{color:#345b35;text-decoration-color:currentColor}
+.site-credits a:focus-visible{outline:2px solid #8ca17d;outline-offset:4px;border-radius:2px}
+.credit-heart{font-size:13px}.credit-repo{display:inline-flex;align-items:center;gap:7px}.credit-repo svg{flex:none}
+body:has(.site-credits) .home-note,body:has(.site-credits) #scaleNote{bottom:43px}
+body:has(.site-credits) #homeExploration,body:has(.site-credits) #exploration{bottom:66px}
+body:has(.site-credits) #home,body:has(.site-credits) #viewport{bottom:186px}
+@media(max-width:900px){body:has(.site-credits) #homeInfo{bottom:186px}body:has(.site-credits)[data-home-info=true] #home{bottom:343px}}
+@media(max-width:800px){body:has(.site-credits) #infoPanel{bottom:187px}body:has(.site-credits)[data-info=true] #viewport{bottom:341px}}
+@media(max-width:480px){.site-credits{font-size:10px;gap:15px}.credit-heart{font-size:11px}.credit-repo{gap:5px}.credit-repo svg{width:13px;height:13px}}
+@media(max-height:600px){body:has(.site-credits) #homeExploration,body:has(.site-credits) #exploration{bottom:59px}body:has(.site-credits) #home,body:has(.site-credits) #viewport{bottom:166px}body:has(.site-credits)[data-home-info=true] #home{bottom:311px}}

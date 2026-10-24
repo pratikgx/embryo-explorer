@@ -22,3 +22,7 @@ The music is included only as part of the edited video. The standalone track is 
 The [Virtual Embryo Challenge on Yukon](https://yukon.org/virtualembryo) prompted the project. [Ash (@ashebytes)](https://x.com/ashebytes) and [Human Atlas](https://github.com/ashemag/human-atlas) inspired the interaction design. No Human Atlas or eMouse Atlas models or images are included.
 
 Scientific sources are credited in the [anatomy matrix](dist/anatomy-matrix.md). Published descriptions informed the original schematic models; source figures, datasets and meshes are not redistributed. Referencing a work does not imply its authors have reviewed or endorsed this explorer.
+
+## GitHub mark
+
+The footer uses the GitHub mark from [Octicons](https://github.com/primer/octicons). Its MIT notice is preserved in [`dist/vendor/OCTICONS-LICENSE.txt`](dist/vendor/OCTICONS-LICENSE.txt).
