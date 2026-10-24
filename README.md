@@ -12,7 +12,7 @@ Credit to [Ash (@ashebytes)](https://x.com/ashebytes) and her [Human Atlas](http
 
 ## Explore
 
-Start with all sixteen stages on one screen. Move the bottom slider or scroll to separate the anatomy, spread out its parts, and zoom into a stage or structure. Click a part for its explanation, drag to rotate, and use the Systems panel to select or hide structures. Reset returns to the full overview.
+Start with all sixteen stages in one overview. On phones, swipe through a larger two-column layout; tablets use four columns. Tap a stage to open its anatomy, then tap a part for a close-up and description. Use the enlarged slider or its Assembled, Separate and All parts shortcuts. Move the bottom slider or scroll to separate the anatomy, spread out its parts, and zoom into a stage or structure. Click a part for its explanation, drag to rotate, and use the Systems panel to select or hide structures. Reset returns to the full overview.
 
 ## Run locally
 

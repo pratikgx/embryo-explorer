@@ -1,10 +1,11 @@
+import {bindExplorationSlider} from './touch-controls.js?v=mobile1';
 import * as T from 'three';
 import {stages,systems,detail,ageBasis} from './stages.js?v=info4';
 import {buildStage} from './models.js?v=info4';
 import {planLayout} from './layout.js?v=canvas3';
 const $=id=>document.getElementById(id),clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=T.MathUtils.lerp;
 const ease=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t)};
-const reduce=matchMedia('(prefers-reduced-motion: reduce)'),PARTS=75;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)'),compact=matchMedia('(max-width:1100px), (pointer:coarse)'),PARTS=75;
 const state={stage:9,target:0,progress:0,pinned:null,hover:null,locked:null,yaw:0,pitch:0,loading:false};
 const canvas=$('scene'),renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:true});renderer.setClearColor(0xffffff,0);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.02;
 const scene=new T.Scene(),camera=new T.PerspectiveCamera(33,1,.01,160);scene.add(new T.HemisphereLight(0xffffff,0x99968b,1.75));
@@ -23,9 +24,9 @@ function requestProgress(value,{candidate=targetKey()}={}){
 }
 function phase(p){return p<.5?'Assembled':p<40?'Separating':p<40.5?'Separate':p<74.5?'Arranging parts':p<=75.5?'All parts':'Inspecting';}
 function syncUI(){
- const focus=targetKey();if(!sliderDragging)$('exploreSlider').value=state.progress;$('phaseLabel').textContent=phase(state.progress);$('progressValue').textContent=Math.round(state.progress)+'%';$('exploreSlider').style.setProperty('--progress',state.progress+'%');
+ const focus=targetKey();$('exploreSlider').value=state.target;$('phaseLabel').textContent=phase(state.progress);$('progressValue').textContent=Math.round(state.progress)+'%';$('exploreSlider').style.setProperty('--progress',state.progress+'%');
  $('exploreSlider').setAttribute('aria-valuetext',`${Math.round(state.progress)} percent, ${phase(state.progress)}${state.target>75&&focus?', '+systems[focus][0]:''}`);
- const text=blocked?'Point to a part to explore':state.target>75&&focus?systems[focus][0]+' · Scroll back to return':state.progress>=68?(focus?systems[focus][0]+' · Scroll to inspect':'Point to a part to explore'):'Scroll to explore · Drag to rotate';
+ const text=blocked?(compact.matches?'Tap a part to explore':'Point to a part to explore'):state.target>75&&focus?systems[focus][0]+(compact.matches?' · Slide back to return':' · Scroll back to return'):state.progress>=68?(compact.matches?'Tap a part to explore':focus?systems[focus][0]+' · Scroll to inspect':'Point to a part to explore'):(compact.matches?'Slide to explore · Drag to rotate':'Scroll to explore · Drag to rotate');
  if($('exploreHint').textContent!==text)$('exploreHint').textContent=text;
  document.body.dataset.progress=state.progress.toFixed(2);document.body.dataset.target=state.target.toFixed(2);document.body.dataset.phase=phase(state.progress);document.body.dataset.selected=focus||'';
  const show=state.pinned||(state.progress>75&&state.locked);document.body.dataset.info=String(!!show);$('infoPanel').hidden=!show;
@@ -34,7 +35,7 @@ function syncUI(){
 function choose(key){if(!model?.userData.parts[key])return;state.pinned=key;state.locked=null;state.hover=key;requestProgress(100);}
 function clearSelection(){const previous=targetKey();requestProgress(Math.min(PARTS,state.target));state.pinned=null;state.locked=state.progress>PARTS?previous:null;state.hover=null;syncUI();}
 $('closeInfo').onclick=clearSelection;$('backParts').onclick=()=>{const previous=targetKey();requestProgress(PARTS);state.pinned=null;state.locked=state.progress>PARTS?previous:null;state.hover=null;syncUI();};
-$('exploreSlider').oninput=e=>requestProgress(e.target.value);$('exploreSlider').onpointerdown=()=>sliderDragging=true;window.addEventListener('pointerup',()=>sliderDragging=false);window.addEventListener('pointercancel',()=>sliderDragging=false);
+bindExplorationSlider($('exploreSlider'),value=>{requestProgress(value);return state.target;});
 $('stageSelect').innerHTML=stages.map((s,i)=>`<option value="${i}">${s.age}</option>`).join('');
 async function ensure(i){if(cache.has(i))return cache.get(i);if(pending.has(i))return pending.get(i);const promise=buildStage(i).then(m=>{cache.set(i,m);return m});pending.set(i,promise);try{return await promise}finally{pending.delete(i)}}
 async function setStage(index){

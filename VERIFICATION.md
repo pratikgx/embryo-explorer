@@ -1,3 +1,11 @@
+## Responsive update — 24 October 2026
+
+- Browser viewport checks at 320 × 568, 390 × 844, 844 × 390, 768 × 1024, 1024 × 768, and 1440 × 900. Reviewed phone overview, stage anatomy, organ information, tablet overview, and landscape inspection. Checked no horizontal document overflow and the camera framing indicator.
+- Overview swiping uses native scrolling on compact screens. Selected stage anatomy retains drag rotation and shared pinch tracking across its part targets. Offscreen overview stages are skipped during rendering.
+- Checked slider pointer dragging, stage keyboard activation, part clicking, return to stage parts and overview, reset, system visibility, and direct stage links. The range keeps its requested position while the scene eases toward it.
+- Three automated slider regressions pass: captured drags beyond either end, cancellation/second-pointer isolation, and selection limits/native input. Run `node --test tests/touch-controls.test.mjs`.
+- These are browser viewport and interaction checks, not a physical iPhone/iPad or Android test. Multi-touch pinch behavior and mobile browser chrome/safe-area behavior still need a physical-device check.
+
 ## Continuous homepage inspection and systems — October 24
 
 - Home loads 16 live stages; slider extends through Stage and Inspect on the same canvas. Untargeted forward input stops at All parts.

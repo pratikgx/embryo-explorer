@@ -1,0 +1,108 @@
+/* Shared, finger-sized exploration control. Keyboard range behavior stays native. */
+#homeSlider,#exploreSlider{height:44px;margin:0;touch-action:none;user-select:none}
+#homeSlider::-webkit-slider-thumb,#exploreSlider::-webkit-slider-thumb{width:28px;height:28px;margin-top:-12px;border:5px solid white;box-shadow:0 0 0 1px #bacbb0,0 2px 5px #52604f18}
+#homeSlider::-webkit-slider-runnable-track,#exploreSlider::-webkit-slider-runnable-track{height:4px}
+#homeSlider::-moz-range-thumb,#exploreSlider::-moz-range-thumb{width:20px;height:20px;border:4px solid white}
+#homeSlider::-moz-range-track,#exploreSlider::-moz-range-track{height:4px}
+.home-milestones{height:26px;display:flex;justify-content:space-between;align-items:center;gap:4px}
+.home-milestones>*{position:static!important;transform:none!important;font-size:10px;color:#75816e}
+.home-milestones button{padding:8px 0;min-height:30px}
+.home-milestones button[aria-pressed=true]{color:#3e5835;font-weight:600}
+#stageDetails{font-size:12px;padding:10px;border-radius:8px;border:1px solid #dfe6d9}
+#homeExploration{padding-top:9px;padding-bottom:9px}
+body:has(.site-credits) #home{bottom:208px}
+@media(max-width:1100px),(pointer:coarse){
+ :root{--dock-bottom:calc(40px + env(safe-area-inset-bottom,0px));--dock-height:134px;--scene-bottom:calc(var(--dock-bottom) + var(--dock-height) + 14px)}
+ html,body{height:100%;height:100dvh;overscroll-behavior:none}
+ header{position:fixed;inset:env(safe-area-inset-top,0px) 0 auto;height:56px;padding:0 max(16px,env(safe-area-inset-left));background:#ffffffed;font-size:15px}
+ header nav{gap:12px}header nav button,.back-home{font-size:13px;min-height:44px}
+ #systemsToggle{display:block;position:fixed;top:calc(58px + env(safe-area-inset-top,0px));left:16px;min-height:44px;padding:8px 14px;font-size:13px;z-index:9;border:1px solid #e3e9dd;border-radius:10px;background:#fff}
+ #systemsPanel{display:none;left:16px;top:calc(108px + env(safe-area-inset-top,0px));width:280px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 300px);padding:15px;background:#fff;box-shadow:0 12px 45px #33472b22;overscroll-behavior:contain}
+ body[data-systems-open=true] #systemsPanel{display:block}
+ .systems-heading h2{font-size:17px}.systems-heading button{font-size:13px;min-height:44px}
+ #systemsContext,#systemsCount{font-size:12px;line-height:1.5}
+ .system-row{gap:10px;min-height:46px;padding:0}.system-name{font-size:14px;min-height:44px}.system-row small{font-size:11px}
+ .system-row input{width:44px;height:32px;flex:none;border:5px solid white;border-radius:18px;background-clip:padding-box}
+ .system-row input:before{width:18px;height:18px;top:2px;left:2px}.system-row input:checked:before{transform:translateX(12px)}
+ body:has(.site-credits) #home,body:has(.site-credits)[data-home-info=true] #home{inset:calc(108px + env(safe-area-inset-top,0px)) 12px var(--scene-bottom);min-height:0;transition:none}
+ #stageBoard{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:clamp(205px,24dvh,285px);gap:16px 12px;padding:8px 0 20px;scrollbar-width:thin;scrollbar-color:#d4ddcc transparent;align-content:start}
+ .stage-preview,.home-parts button{touch-action:pan-y}
+ .stage-age{font-size:14px;bottom:18px;color:#53654b}.stage-title{display:block!important;opacity:1;font-size:12px;bottom:0;color:#78856f}
+ body[data-focus-stage] #stageBoard{overflow:hidden}
+ #focusHeader{top:0;left:0;right:0;gap:10px;justify-content:center}
+ #backOverview{font-size:13px;min-height:44px;padding:6px}#focusStage{font-size:16px;min-height:44px;max-width:126px}#stageDetails{min-height:44px;font-size:13px}
+ #hoverName{display:none}
+ #focusParts button span{font-size:12px;white-space:normal;line-height:1.25;width:104px;max-width:130%;padding:4px 2px;color:#52674b;top:90%;background:#ffffffeb}
+ body:has(.site-credits) #homeExploration,body:has(.site-credits)[data-home-info=true] #homeExploration,body:has(.site-credits) #exploration{left:50%;bottom:var(--dock-bottom);width:min(620px,calc(100vw - 24px));padding:10px 16px;min-height:var(--dock-height);border-radius:15px;background:#fffffffa;backdrop-filter:blur(12px)}
+ .home-progress,.exploration-top{font-size:13px;color:#52674b}.home-progress output,#progressValue{font-size:12px;color:#7a896e}
+ .home-milestones{height:30px}.home-milestones>*{font-size:11px}.home-milestones button{min-height:36px}
+ #boardStatus,#exploreHint{font-size:12px;line-height:1.4;color:#6d7d61;min-height:17px;margin:5px 0 0}
+ body:has(.site-credits) .home-note,body:has(.site-credits) #scaleNote{display:none}
+ .site-credits{bottom:env(safe-area-inset-bottom,0px);height:36px;font-size:11px;gap:16px;background:#fff}
+ .site-credits a{display:inline-flex;align-items:center;min-height:32px}
+ body:has(.site-credits) #homeInfo,body:has(.site-credits) #infoPanel{top:auto;left:12px;right:12px;bottom:var(--scene-bottom);width:auto;max-height:min(28dvh,230px);padding:14px 18px;background:#fff;border-radius:14px;z-index:8;overscroll-behavior:contain}
+ #homeInfoAge,#infoAge{font-size:12px;margin:0 36px 8px 0;color:#7b886f}
+ #homeInfoName,#infoName{font-size:20px;line-height:1.2;margin:0 30px 10px 0}
+ #homeInfoDescription,#infoDescription{font-size:14px;line-height:1.55;color:#647359;margin:0 0 10px!important}
+ #enterStage,#backParts{position:static;width:100%;max-width:none;font-size:13px;min-height:44px;padding:10px 12px}
+ #closeHomeInfo,#closeInfo{width:44px;height:44px;top:2px;right:2px;font-size:26px}
+ body:has(.site-credits)[data-home-info=true] #home{bottom:calc(var(--scene-bottom) + var(--info-height,180px) + 10px)}
+ body:has(.site-credits) #viewport{inset:150px 12px var(--scene-bottom)}
+ body:has(.site-credits)[data-info=true] #viewport{bottom:calc(var(--scene-bottom) + min(28dvh,230px) + 10px);right:12px}
+ .part-label{font-size:12px;min-height:36px;opacity:1;white-space:normal;max-width:110px}
+ dialog{padding:24px;max-height:82dvh;width:calc(100vw - 32px)}dialog p,.source-links a{font-size:14px}#closeSources{min-width:44px;min-height:44px;right:6px;top:6px}
+}
+@media(max-width:600px){
+ #stageBoard{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:clamp(210px,32dvh,290px);gap:18px 10px}
+ .stage-age{font-size:15px}.stage-title{font-size:12px}
+ #focusParts button span{font-size:12px}
+}
+@media(max-height:600px) and (min-width:601px){
+ :root{--dock-height:110px;--dock-bottom:26px}
+ header{height:46px}#systemsToggle{top:48px;left:12px;min-height:40px}
+ body:has(.site-credits) #home,body:has(.site-credits)[data-home-info=true] #home{top:92px;bottom:var(--scene-bottom)}
+ #stageBoard{grid-auto-rows:190px}
+ #homeExploration #boardStatus,#exploreHint{display:none}
+ .site-credits{height:26px}
+ body:has(.site-credits) #homeInfo,body:has(.site-credits) #infoPanel{top:92px;bottom:var(--scene-bottom);left:auto;right:12px;width:250px;max-height:none}
+ body:has(.site-credits)[data-home-info=true] #home,body:has(.site-credits)[data-info=true] #viewport{right:278px;bottom:var(--scene-bottom)}
+ #systemsPanel{top:92px;max-height:calc(100dvh - 110px)}
+ #focusHeader{justify-content:flex-start}
+}
+@media(min-width:601px) and (min-height:601px) and (max-width:1100px){
+ #stageBoard{grid-auto-rows:clamp(210px,25dvh,290px)}
+ #focusParts button span{font-size:14px;width:140px}
+}
+@media(max-width:360px){
+ header{padding:0 12px;font-size:14px}header nav{gap:8px}header nav button{font-size:12px}
+ .home-milestones>*{font-size:10px}#boardStatus{font-size:11px}
+ #focusHeader{gap:3px}#backOverview{font-size:12px}.site-credits{font-size:10px;gap:10px}
+}
+@media(max-width:600px) and (max-height:700px){
+ :root{--dock-height:122px}
+ body[data-focus-stage] #systemsToggle{top:56px;left:8px;min-height:40px;padding:5px 8px;font-size:12px}
+ body[data-focus-stage]:has(.site-credits) #home{top:58px}
+ body[data-focus-stage] #focusHeader{left:74px;justify-content:flex-end;gap:1px}
+ body[data-focus-stage] #backOverview{font-size:11px;padding:4px}
+ body[data-focus-stage] #focusStage{font-size:14px;max-width:90px}
+ body[data-focus-stage] #stageDetails{font-size:12px;padding:5px}
+ #homeExploration{padding:8px 14px!important}#boardStatus{font-size:11px}
+ body:has(.site-credits) #homeInfo{max-height:24dvh;padding:12px 15px}
+ #homeInfoName{font-size:18px;margin-bottom:6px}#homeInfoAge{font-size:11px;margin-bottom:6px}#homeInfoDescription{font-size:13px}
+}
+@media(max-height:600px) and (min-width:601px){
+ :root{--dock-height:96px}
+ body[data-focus-stage]:has(.site-credits) #home,body[data-focus-stage]:has(.site-credits)[data-home-info=true] #home{top:48px}
+ body[data-focus-stage] #focusHeader{left:90px}
+ body:has(.site-credits) #homeInfo,body:has(.site-credits) #infoPanel{top:48px}
+ #homeExploration,#exploration{padding-top:6px!important;padding-bottom:6px!important}
+ #homeSlider,#exploreSlider{height:36px}
+ .home-milestones{height:24px}.home-milestones button{min-height:28px;padding:4px 0}
+}
+@media(max-width:1100px),(pointer:coarse){
+ header nav{align-items:center}
+ .milestones{font-size:11px;color:#75816e}
+}
+@media(max-width:600px){
+ header .back-home{position:fixed;right:16px;top:60px;display:flex;align-items:center;min-height:44px;font-size:13px}
+}
