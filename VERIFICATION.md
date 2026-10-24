@@ -6,7 +6,7 @@
 - Verified drag while over an inspected component, visibility checkbox synchronization, hidden-component target removal and Show all.
 - All 16 enlarged stage layouts reported their visible bounds framed, with 3, 2, 2, 5, 5, 6 and then 9 components at each later stage.
 - Changing from nervous-system inspection to Day 1 clears the unavailable target and returns to the three-component stage view. Keyboard Enter on Cell body opens inspection. Reset restores the 16-stage assembled overview.
-- Browser checks at 1280 × 720, with no observed console warnings/errors. Physical touch and screen-reader testing remain outstanding.
+- Browser checks at 1280 × 720 and the published 543 × 724 preview. Verified compact stage layout, Systems selection and automatic menu closing; corrected an overlapping back button found during this check. No observed console warnings/errors. Physical touch and screen-reader testing remain outstanding.
 - No new anatomical geometry or scientific claims; the close-up shows the existing illustrative structures. No refreshed video requested or recorded in this revision.
 
 ## Shared live home slider — October 24

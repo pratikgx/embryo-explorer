@@ -22,7 +22,7 @@ function request(value){pendingChoice=null;let next=clamp(Number(value)||0,0,160
 function applyChoice(i,key){if(key)hidden.delete(key);selected={i,key};setFocus(i);updateInfo();updateSystems();request(key?160:130);}
 function choose(i,key=null){document.body.dataset.systemsOpen='false';$('systemsToggle').setAttribute('aria-expanded','false');if(focused!==null&&progress>130&&(focused!==i||selected?.key!==key)){pendingChoice={i,key};target=focused===i?130:100;dirty=true;return;}applyChoice(i,key);}
 function closeInfo(){status('Scroll to explore · Point to a stage or part to zoom further');if(progress>130)request(130);selected=null;$('homeInfo').hidden=true;document.body.dataset.homeInfo='false';grid.querySelectorAll('.stage-card').forEach(c=>c.dataset.active='false');dirty=true;}
-$('closeHomeInfo').onclick=()=>{if(focused!==null)choose(focused,null);else closeInfo();};
+$('closeHomeInfo').onclick=()=>{$('homeInfo').hidden=true;document.body.dataset.homeInfo='false';dirty=true;};
 $('enterStage').onclick=()=>{if(progress>130)request(130);else if(selected)choose(selected.i,selected.key);};
 $('backOverview').onclick=()=>{pendingChoice=null;request(100);status('Returning to all sixteen stages');};
 $('focusStage').onchange=e=>{const i=+e.target.value,key=selected?.key;choose(i,stages[i].parts.includes(key)&&!hidden.has(key)?key:null);};
@@ -65,7 +65,7 @@ function render(){if(!canvasRect||!boxes.length)return;renderer.setScissorTest(f
  for(const [key,p] of Object.entries(model.userData.parts)){
  const entry=layout.entries[key];p.position.set(...(directions[key]||[0,0,0])).multiplyScalar(exp).lerp(entry.position,tray);p.scale.setScalar(mix(1,entry.scale,tray));p.quaternion.copy(identity).slerp(entry.rotation,tray);
  let opacity=1;if(i>=5){if(key==='body')opacity=mix(1,.09,reveal)*(1-tray)+tray;else if(!['support','yolk'].includes(key))opacity=reveal;}
- if(i!==focused)opacity*=1-focus;if(i===focused&&selected?.key!==key)opacity*=1-inspect*.97;if(hidden.has(key))opacity=0;
+ if(i!==focused)opacity*=1-focus;if(i===focused&&selected?.key!==key)opacity*=1-inspect;if(hidden.has(key))opacity=0;
  p.visible=opacity>.001;const lit=(selected?.i===i&&selected.key===key)||(hover?.i===i&&hover.key===key)||systemHighlight===key;
  p.traverse(o=>{if(o.isMesh){o.material.opacity=opacity*o.userData.baseOpacity;o.material.depthWrite=o.material.opacity>.85;o.material.emissive.set(lit?'#8b9e72':'#000000');o.material.emissiveIntensity=lit?.12:0;}});
  partPoints[key]=record.corners[key].map(c=>c.clone().multiply(p.scale).applyQuaternion(p.quaternion).add(p.position));if(!hidden.has(key))points.push(...partPoints[key]);
@@ -84,7 +84,7 @@ function tick(now){requestAnimationFrame(tick);const dt=Math.min(.05,(now-(last|
  if(pendingChoice&&Math.abs(progress-target)<.03){const next=pendingChoice;pendingChoice=null;applyChoice(next.i,next.key);}
  if(progress<=100&&target<=100&&focused!==null){focused=null;closeInfo();updateSystems();dirty=true;}
  if(resetting){let rest=true;for(const r of records){if(!r)continue;r.yaw=mix(r.yaw,0,1-Math.exp(-dt*8));r.pitch=mix(r.pitch,0,1-Math.exp(-dt*8));if(Math.abs(r.yaw)+Math.abs(r.pitch)>.001)rest=false;else r.yaw=r.pitch=0;}resetting=!rest;dirty=true;}
- if(selected){$('enterStage').hidden=!selected.key&&progress>=129.9;$('enterStage').textContent=progress>130?'← Back to stage parts':selected.key?'Zoom into this part':'Zoom into this stage';}
+ if(selected){if(progress>130)status(name(selected.i,selected.key)+' · Scroll back to return');$('enterStage').hidden=!selected.key&&progress>=129.9;$('enterStage').textContent=progress>130?'← Back to stage parts':selected.key?'Zoom into this part':'Zoom into this stage';}
  if(!sliding)$('homeSlider').value=progress;$('homeSlider').style.setProperty('--progress',(progress/160*100)+'%');$('homeValue').textContent=Math.round(progress/160*100)+'%';$('homePhase').textContent=progress<.1?'Assembled':progress<49.9?'Separating':progress<50.1?'Separate':progress<99.9?'Arranging parts':progress<100.1?'All parts':progress<129.9?'Into the stage':progress<130.1?'Stage anatomy':progress<159.9?'Closer look':'Inspect';$('homeSlider').setAttribute('aria-valuetext',`${$('homePhase').textContent}${focused!==null?', '+stages[focused].age:''}`);if(dirty){render();dirty=false;}}
 resize();requestAnimationFrame(tick);
 for(let i=0;i<stages.length;i++){
