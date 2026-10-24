@@ -18,3 +18,5 @@ This is an educational schematic illustration. It is not a clinical, diagnostic,
 Favicon: a sculpted embryo illustration generated with the built-in image-generation tool for this project, exported as PNG and ICO browser icons. Covered by the project’s MIT license.
 
 Footer GitHub mark: GitHub Octicons, MIT license. See vendor/OCTICONS-LICENSE.txt.
+
+Social preview: rendered from the project’s original 3D anatomy and typography; covered by the project’s MIT license.
