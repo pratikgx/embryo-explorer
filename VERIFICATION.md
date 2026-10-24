@@ -1,3 +1,14 @@
+## Continuous homepage inspection and systems — October 24
+
+- Home loads 16 live stages; slider extends through Stage and Inspect on the same canvas. Untargeted forward input stops at All parts.
+- Clicking Week 24 heart moves from the overview to Inspect. Back to stage parts returns to the named nine-component spread. Hovering that heart and scrolling also selects it and advances the camera.
+- Systems selection inspected respiratory and nervous anatomy; switching targets returns through stage framing before approaching the next structure.
+- Verified drag while over an inspected component, visibility checkbox synchronization, hidden-component target removal and Show all.
+- All 16 enlarged stage layouts reported their visible bounds framed, with 3, 2, 2, 5, 5, 6 and then 9 components at each later stage.
+- Changing from nervous-system inspection to Day 1 clears the unavailable target and returns to the three-component stage view. Keyboard Enter on Cell body opens inspection. Reset restores the 16-stage assembled overview.
+- Browser checks at 1280 × 720, with no observed console warnings/errors. Physical touch and screen-reader testing remain outstanding.
+- No new anatomical geometry or scientific claims; the close-up shows the existing illustrative structures. No refreshed video requested or recorded in this revision.
+
 ## Shared live home slider — October 24
 
 - All 16 live stages load at the root URL, with day labels first and pregnancy weeks afterward.

@@ -1,10 +1,10 @@
-Current navigation — shared home exploration
+Current navigation — continuous overview to component inspection
 
-The root page opens all 16 stages together on a white, borderless canvas. One bottom slider and wheel input move every live stage through Assembled (0), Separate (50), and All parts (100). One shared WebGL renderer draws the same meshes throughout; there are no preview-image replacements. Each stage can be rotated by dragging.
+The root opens all 16 stages. One slider and wheel/pinch input share exploration progress: Assembled 0, Separate 50, All parts 100, Stage 130, Inspect 160. The displayed percentage is normalized to this complete range. Past All parts, a hovered or selected stage expands on the same canvas. Past Stage, the camera approaches the targeted component. Without a target, progress stops at the applicable boundary. No separate page or modal is required.
 
-Click a stage or structure for a non-modal information box. All parts also exposes 113 keyboard-accessible structure targets. Explore in 3D opens the selected stage at the equivalent exploration position; a selected structure continues smoothly into inspection. The single-stage view retains Assembled → Separate → All parts → Inspect, orbiting, wheel input, stage selection and reset. All stages returns to the assembled 16-stage home. Home Reset restores assembled geometry and initial orientations.
+Click a stage or component to zoom directly; hover plus forward scrolling also targets anatomy. Drag to rotate. Component names appear in the stage spread, and information updates beside the anatomy. A left systems panel highlights structures across stages, filters visibility, and selects components within a focused stage. Compact screens expose it through Systems. Counts on the overview are stage occurrences, not anatomical piece counts. Stage changes preserve a target only where represented. All 16 stages and reverse scrolling return to the overview; Reset restores assembled geometry, orientation and all visibility.
 
-Current entry files: dist/index.html, home.js, home.css and home-directions.js for the overview; dist/explore.html, flow.js and flow.css for deeper exploration. Other interface notes below describe earlier editions. Models, scientific limitations and credits remain applicable. The existing video is an earlier guided presentation and does not demonstrate this new home interaction.
+Current files: dist/index.html, home.js, home.css and home-directions.js. The separate explore.html / flow.js experience remains reachable through older links. Earlier notes below describe previous editions. Geometry remains schematic; this navigation update does not add microscopic reconstruction or new anatomical components. The existing guided video predates the new navigation.
 
 --- Project background and earlier editions ---
 
