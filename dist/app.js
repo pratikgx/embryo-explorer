@@ -1,7 +1,7 @@
 import * as T from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
-import {stages,systems,detail} from './stages.js?v=journey60';
-import {buildStage} from './models.js?v=journey60';
+import {stages,systems,detail} from './stages.js?v=journey60b';
+import {buildStage} from './models.js?v=journey60b';
 import {planLayout} from './layout.js';
 import {journeyAt,duration as journeyDuration} from './journey.js';
 const $=id=>document.getElementById(id),clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t;
@@ -38,6 +38,8 @@ function refreshTray(){
  document.querySelectorAll('[data-tray]').forEach(b=>{b.onclick=()=>{pauseForInput();selectPart(b.dataset.tray)};b.onpointerenter=b.onfocus=()=>state.hover=b.dataset.tray;b.onpointerleave=b.onblur=()=>state.hover=null;});
  document.body.dataset.trayCount=stages[state.stage].parts.length;
 }
+function setAnatomyPanel(open){document.body.dataset.layersOpen=String(open);$('anatomyToggle').setAttribute('aria-expanded',String(open));$('anatomyToggle').textContent=open?'Close anatomy':'Anatomy';}
+$('anatomyToggle').onclick=()=>setAnatomyPanel(document.body.dataset.layersOpen!=='true');
 function syncView(){
  document.body.dataset.view=state.view;document.body.dataset.inspecting=String(state.view==='parts'&&state.isolate);
  for(const [id,value] of [['assembledView','assembled'],['separatedView','separated'],['partsView','parts']])$(id).setAttribute('aria-pressed',state.view===value);
@@ -49,7 +51,7 @@ function setView(view,{manual=true,frame=true}={}){
  if(manual)pauseForInput();
  if(view==='parts'&&state.view!=='parts'){hiddenBeforeParts=new Set(state.hidden);state.hidden.clear();}
  if(view!=='parts'&&state.view==='parts'&&hiddenBeforeParts){state.hidden=hiddenBeforeParts;hiddenBeforeParts=null;}
- state.view=view;state.selected=null;state.isolate=false;state.hover=null;state.explode=view==='separated'?1:0;
+ setAnatomyPanel(false);state.view=view;state.selected=null;state.isolate=false;state.hover=null;state.explode=view==='separated'?1:0;
  $('explode').value=state.explode;$('explodeValue').textContent=Math.round(state.explode*100)+'%';syncView();resize();refreshTray();updateLayers();if(frame)frameDefault();
  controls.enableRotate=view!=='parts';controls.maxDistance=view==='parts'?40:14;
 }
@@ -75,7 +77,7 @@ function updateSelection(){
  document.querySelectorAll('[data-part]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.part===k));
  document.body.dataset.selected=k||'';document.body.dataset.isolated=String(state.isolate);
 }
-function selectPart(k){state.selected=k;state.isolate=state.view==='parts';state.hidden.delete(k);updateLayers();if(state.view==='parts'){resize();controls.enableRotate=true;focusSelected();}}
+function selectPart(k){if(state.view!=='parts')setAnatomyPanel(true);state.selected=k;state.isolate=state.view==='parts';state.hidden.delete(k);updateLayers();if(state.view==='parts'){resize();controls.enableRotate=true;focusSelected();}}
 function frameDefault(){if(state.view==='parts'){cameraGoal=overviewCamera();return;}const support=stages[state.stage].parts.includes('support')&&!state.hidden.has('support');const target=new T.Vector3(support?.20:0,.12,0);const distance=Math.max(5.8,3.4/Math.max(.6,camera.aspect))+state.explode*1.7;cameraGoal={pos:target.clone().add(new T.Vector3(distance*.60,.28,distance*.80)),target};}
 async function setStage(value,{manual=true}={}){
  const i=clamp(Math.round(Number(value)||0),0,stages.length-1);if(manual){pauseForInput();restoreCleavage();}
@@ -100,7 +102,7 @@ $('previous').onclick=()=>setStage(state.stage-1);$('next').onclick=()=>setStage
 $('explode').oninput=e=>{pauseForInput();if(state.view==='parts')setView('separated');state.view='separated';state.explode=+e.target.value;$('explodeValue').textContent=Math.round(state.explode*100)+'%';state.isolate=false;updateSelection();frameDefault();};
 $('isolate').onclick=()=>{pauseForInput();state.isolate=!state.isolate;updateSelection();state.isolate?focusSelected():frameDefault()};
 $('clearSelection').onclick=()=>{if(state.view==='parts'){$('backToParts').click();return;}pauseForInput();state.selected=null;state.isolate=false;updateSelection();frameDefault()};
-function reset(){state.view='assembled';hiddenBeforeParts=null;actualTray=0;controls.enableRotate=true;controls.maxDistance=14;state.selected=null;state.isolate=false;state.explode=0;state.hidden=new Set();$('explode').value=0;$('explodeValue').textContent='0%';syncView();resize();refreshTray();updateLayers();frameDefault();}
+function reset(){setAnatomyPanel(false);state.view='assembled';hiddenBeforeParts=null;actualTray=0;controls.enableRotate=true;controls.maxDistance=14;state.selected=null;state.isolate=false;state.explode=0;state.hidden=new Set();$('explode').value=0;$('explodeValue').textContent='0%';syncView();resize();refreshTray();updateLayers();frameDefault();}
 $('reset').onclick=()=>{pauseForInput();reset()};$('sourceBtn').onclick=()=>$('sources').showModal();$('closeSources').onclick=()=>$('sources').close();$('sources').onclick=e=>{if(e.target===$('sources'))$('sources').close()};
 const ray=new T.Raycaster(),mouse=new T.Vector2();let down=[0,0];
 canvas.addEventListener('pointerdown',e=>{pauseForInput();dragging=true;down=[e.clientX,e.clientY];pointerTarget.set(0,0)});
@@ -206,7 +208,7 @@ function stopFilm(){if(!state.playing)return;restoreCleavage();state.playing=fal
 $('play').onclick=()=>startFilm();$('record').onclick=()=>{if(!window.MediaRecorder){$('record').textContent='Export unavailable';return}startFilm(true)};
 $('stopFilm').onclick=stopFilm;$('pauseFilm').onclick=()=>{state.paused=!state.paused;$('pauseFilm').textContent=state.paused?'Resume':'Pause';filmStart=performance.now()-state.time*1000};
 $('filmSeek').oninput=e=>{state.time=+e.target.value;state.paused=true;$('pauseFilm').textContent='Resume';filmStart=performance.now()-state.time*1000};
-window.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.playing)stopFilm()});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){if(state.playing)stopFilm();else setAnatomyPanel(false)}});
 function animate(now){requestAnimationFrame(animate);const dt=Math.min(.06,(now-lastTime)/1000);lastTime=now;
  if(state.playing){if(!state.paused)state.time=clamp((now-filmStart)/1000,0,journeyDuration);choreograph(state.time);$('filmSeek').value=state.time;$('filmSeek').setAttribute('aria-valuetext',`${Math.floor(state.time)} of ${journeyDuration} seconds`);$('filmTime').textContent=`${Math.floor(state.time/60)}:${String(Math.floor(state.time%60)).padStart(2,'0')}`;}
  else{if(cameraGoal){const alpha=reduce.matches?1:1-Math.exp(-dt*5);camera.position.lerp(cameraGoal.pos,alpha);controls.target.lerp(cameraGoal.target,alpha);if(camera.position.distanceTo(cameraGoal.pos)<.003)cameraGoal=null;}controls.update();pointerActual.lerp(reduce.matches?new T.Vector2():pointerTarget,1-Math.exp(-dt*3));root.rotation.set(pointerActual.y*.016,pointerActual.x*.025,0);key.position.x=3+pointerActual.x*.35;document.documentElement.style.setProperty('--px',pointerActual.x*18+'px');document.documentElement.style.setProperty('--py',pointerActual.y*12+'px');}

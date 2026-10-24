@@ -12,6 +12,8 @@
 
 - Reviewed the complete 60-second sequence through two-second frame samples plus full-resolution views. The refreshed H.264 export is 1920 × 1080 at 30 fps; all 1,800 frames decode successfully. Browser recording completed with no errors or warnings.
 
+- On the 543-pixel-wide preview, anatomy controls initially overlapped the placenta. Added a compact Anatomy toggle below 620 pixels; checked opening, visibility changes, and closing. The assembled view now keeps the complete arrangement clear. This responsive change does not alter the exported film.
+
 ## Previous refinement checks
 
 - All 16 stages selected in All parts. Loaded anatomy, stage selector, slider and collection item counts matched: 3, 2, 2, 5, 5, 6, then 9 structures for each remaining stage. Captured and reviewed the complete contact sheet.
