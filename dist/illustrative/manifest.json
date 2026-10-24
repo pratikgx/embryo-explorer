@@ -1,0 +1,590 @@
+{
+  "groups": {
+    "body": {
+      "name": "Outer form",
+      "color": "#e7bfa5",
+      "description": "A smooth, original illustration of the embryo\u2019s outer form. Hide it to explore the structures inside."
+    },
+    "neural": {
+      "name": "Neural tube",
+      "color": "#9caec4",
+      "description": "An illustrative neural tube and early brain regions."
+    },
+    "heart": {
+      "name": "Heart",
+      "color": "#cc7869",
+      "description": "A stylized looping embryonic heart with rounded chamber forms. It is an illustration, not a physiological simulation."
+    },
+    "somites": {
+      "name": "Somites",
+      "color": "#c7ae82",
+      "description": "Paired segments arranged along the developing body axis."
+    },
+    "gut": {
+      "name": "Gut tube",
+      "color": "#83a99a",
+      "description": "A simplified internal tube following the curved body plan."
+    },
+    "vessels": {
+      "name": "Vessels",
+      "color": "#af91a1",
+      "description": "Illustrative paired vessels alongside the body axis."
+    },
+    "sensory": {
+      "name": "Optic vesicles",
+      "color": "#797e88",
+      "description": "Subtle eye-region forms within the head."
+    }
+  },
+  "stages": [
+    {
+      "id": "form1",
+      "age": "Early fold",
+      "ts": 1,
+      "species": "Illustrative mammalian embryo",
+      "parts": [
+        {
+          "id": "outer_form",
+          "name": "outer form",
+          "group": "body",
+          "file": "form1-outer_form.bin",
+          "vertices": 38446,
+          "triangles": 76892,
+          "center": [
+            -0.3345572054386139,
+            0.21349427103996277,
+            -5.349472864679683e-09
+          ],
+          "bounds": [
+            [
+              -1.2164636850357056,
+              -1.3762712478637695,
+              -0.44641292095184326
+            ],
+            [
+              0.618820309638977,
+              1.5557481050491333,
+              0.44641298055648804
+            ]
+          ]
+        },
+        {
+          "id": "neural_tube",
+          "name": "neural tube",
+          "group": "neural",
+          "file": "form1-neural_tube.bin",
+          "vertices": 12374,
+          "triangles": 24740,
+          "center": [
+            -0.4449845850467682,
+            0.3950205147266388,
+            2.8465023671486733e-09
+          ],
+          "bounds": [
+            [
+              -0.9770554304122925,
+              -1.2562687397003174,
+              -0.23494546115398407
+            ],
+            [
+              0.3968697488307953,
+              1.4571696519851685,
+              0.23494549095630646
+            ]
+          ]
+        },
+        {
+          "id": "heart",
+          "name": "heart",
+          "group": "heart",
+          "file": "form1-heart.bin",
+          "vertices": 3876,
+          "triangles": 7748,
+          "center": [
+            0.12925390899181366,
+            0.08685100078582764,
+            0.1676008403301239
+          ],
+          "bounds": [
+            [
+              -0.20621278882026672,
+              -0.2574022114276886,
+              -0.009290146641433239
+            ],
+            [
+              0.4497891366481781,
+              0.4508291184902191,
+              0.386056125164032
+            ]
+          ]
+        },
+        {
+          "id": "somites",
+          "name": "somites",
+          "group": "somites",
+          "file": "form1-somites.bin",
+          "vertices": 4996,
+          "triangles": 9920,
+          "center": [
+            -0.5952467322349548,
+            -0.3909393548965454,
+            -7.933764756273831e-10
+          ],
+          "bounds": [
+            [
+              -0.9211264848709106,
+              -1.2445403337478638,
+              -0.31879615783691406
+            ],
+            [
+              0.10400459915399551,
+              0.4824851453304291,
+              0.3187960982322693
+            ]
+          ]
+        },
+        {
+          "id": "gut_tube",
+          "name": "gut tube",
+          "group": "gut",
+          "file": "form1-gut_tube.bin",
+          "vertices": 3072,
+          "triangles": 6140,
+          "center": [
+            -0.24216912686824799,
+            -0.16348537802696228,
+            4.875801096204668e-09
+          ],
+          "bounds": [
+            [
+              -0.48964694142341614,
+              -0.7825181484222412,
+              -0.09111832082271576
+            ],
+            [
+              0.36993131041526794,
+              0.6160272359848022,
+              0.09111829102039337
+            ]
+          ]
+        },
+        {
+          "id": "paired_vessels",
+          "name": "paired vessels",
+          "group": "vessels",
+          "file": "form1-paired_vessels.bin",
+          "vertices": 1376,
+          "triangles": 2496,
+          "center": [
+            -0.367118239402771,
+            -0.4511163532733917,
+            5.804522196228845e-09
+          ],
+          "bounds": [
+            [
+              -0.7119179368019104,
+              -1.2274796962738037,
+              -0.1461610645055771
+            ],
+            [
+              0.5173352956771851,
+              0.5740000009536743,
+              0.1461610347032547
+            ]
+          ]
+        },
+        {
+          "id": "optic_vesicles",
+          "name": "optic vesicles",
+          "group": "sensory",
+          "file": "form1-optic_vesicles.bin",
+          "vertices": 324,
+          "triangles": 640,
+          "center": [
+            0.24137595295906067,
+            0.920280933380127,
+            1.839649543811106e-09
+          ],
+          "bounds": [
+            [
+              0.17745038866996765,
+              0.846802830696106,
+              -0.3239811658859253
+            ],
+            [
+              0.30255064368247986,
+              0.9931975603103638,
+              0.32398122549057007
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "form2",
+      "age": "Body plan",
+      "ts": 2,
+      "species": "Illustrative mammalian embryo",
+      "parts": [
+        {
+          "id": "outer_form",
+          "name": "outer form",
+          "group": "body",
+          "file": "form2-outer_form.bin",
+          "vertices": 41578,
+          "triangles": 83152,
+          "center": [
+            -0.2940782904624939,
+            0.2621309161186218,
+            -5.919133183596159e-09
+          ],
+          "bounds": [
+            [
+              -1.2169967889785767,
+              -1.2853305339813232,
+              -0.523398220539093
+            ],
+            [
+              0.7873018980026245,
+              1.6510201692581177,
+              0.5233981013298035
+            ]
+          ]
+        },
+        {
+          "id": "neural_tube",
+          "name": "neural tube",
+          "group": "neural",
+          "file": "form2-neural_tube.bin",
+          "vertices": 13902,
+          "triangles": 27800,
+          "center": [
+            -0.4020015597343445,
+            0.4988988935947418,
+            1.5937393627041274e-09
+          ],
+          "bounds": [
+            [
+              -0.9772917032241821,
+              -1.1478201150894165,
+              -0.2794768214225769
+            ],
+            [
+              0.5220202207565308,
+              1.5166555643081665,
+              0.27947670221328735
+            ]
+          ]
+        },
+        {
+          "id": "heart",
+          "name": "heart",
+          "group": "heart",
+          "file": "form2-heart.bin",
+          "vertices": 3876,
+          "triangles": 7748,
+          "center": [
+            0.12925390899181366,
+            0.08685100078582764,
+            0.1676008403301239
+          ],
+          "bounds": [
+            [
+              -0.20621278882026672,
+              -0.2574022114276886,
+              -0.009290146641433239
+            ],
+            [
+              0.4497891366481781,
+              0.4508291184902191,
+              0.386056125164032
+            ]
+          ]
+        },
+        {
+          "id": "somites",
+          "name": "somites",
+          "group": "somites",
+          "file": "form2-somites.bin",
+          "vertices": 4996,
+          "triangles": 9920,
+          "center": [
+            -0.5945453643798828,
+            -0.373782217502594,
+            -6.681065145563991e-10
+          ],
+          "bounds": [
+            [
+              -0.9217523336410522,
+              -1.1535977125167847,
+              -0.3190978169441223
+            ],
+            [
+              0.11514518409967422,
+              0.48402032256126404,
+              0.31909769773483276
+            ]
+          ]
+        },
+        {
+          "id": "gut_tube",
+          "name": "gut tube",
+          "group": "gut",
+          "file": "form2-gut_tube.bin",
+          "vertices": 3072,
+          "triangles": 6140,
+          "center": [
+            -0.24216912686824799,
+            -0.16348537802696228,
+            4.875801096204668e-09
+          ],
+          "bounds": [
+            [
+              -0.48964694142341614,
+              -0.7825181484222412,
+              -0.09111832082271576
+            ],
+            [
+              0.36993131041526794,
+              0.6160272359848022,
+              0.09111829102039337
+            ]
+          ]
+        },
+        {
+          "id": "paired_vessels",
+          "name": "paired vessels",
+          "group": "vessels",
+          "file": "form2-paired_vessels.bin",
+          "vertices": 1400,
+          "triangles": 2544,
+          "center": [
+            -0.3623306155204773,
+            -0.43135473132133484,
+            5.800809166345289e-09
+          ],
+          "bounds": [
+            [
+              -0.7133756875991821,
+              -1.1206456422805786,
+              -0.14554421603679657
+            ],
+            [
+              0.6369363069534302,
+              0.5740000009536743,
+              0.14554424583911896
+            ]
+          ]
+        },
+        {
+          "id": "optic_vesicles",
+          "name": "optic vesicles",
+          "group": "sensory",
+          "file": "form2-optic_vesicles.bin",
+          "vertices": 520,
+          "triangles": 1032,
+          "center": [
+            0.23960290849208832,
+            0.921047031879425,
+            -1.0889309898232113e-08
+          ],
+          "bounds": [
+            [
+              0.1609184443950653,
+              0.8274401426315308,
+              -0.4049847722053528
+            ],
+            [
+              0.3190823495388031,
+              1.012560248374939,
+              0.4049847722053528
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "form3",
+      "age": "Organ formation",
+      "ts": 3,
+      "species": "Illustrative mammalian embryo",
+      "parts": [
+        {
+          "id": "outer_form",
+          "name": "outer form",
+          "group": "body",
+          "file": "form3-outer_form.bin",
+          "vertices": 44374,
+          "triangles": 88744,
+          "center": [
+            -0.2705608606338501,
+            0.2889454960823059,
+            -6.825263465515263e-09
+          ],
+          "bounds": [
+            [
+              -1.2173949480056763,
+              -1.2222553491592407,
+              -0.5899338722229004
+            ],
+            [
+              0.9213863611221313,
+              1.7064176797866821,
+              0.5899338126182556
+            ]
+          ]
+        },
+        {
+          "id": "neural_tube",
+          "name": "neural tube",
+          "group": "neural",
+          "file": "form3-neural_tube.bin",
+          "vertices": 14928,
+          "triangles": 29852,
+          "center": [
+            -0.3795894980430603,
+            0.5602276921272278,
+            7.79221520641471e-10
+          ],
+          "bounds": [
+            [
+              -0.9774858951568604,
+              -1.071988582611084,
+              -0.30997908115386963
+            ],
+            [
+              0.6158550977706909,
+              1.549770712852478,
+              0.3099789023399353
+            ]
+          ]
+        },
+        {
+          "id": "heart",
+          "name": "heart",
+          "group": "heart",
+          "file": "form3-heart.bin",
+          "vertices": 3876,
+          "triangles": 7748,
+          "center": [
+            0.12925390899181366,
+            0.08685100078582764,
+            0.1676008403301239
+          ],
+          "bounds": [
+            [
+              -0.20621278882026672,
+              -0.2574022114276886,
+              -0.009290146641433239
+            ],
+            [
+              0.4497891366481781,
+              0.4508291184902191,
+              0.386056125164032
+            ]
+          ]
+        },
+        {
+          "id": "somites",
+          "name": "somites",
+          "group": "somites",
+          "file": "form3-somites.bin",
+          "vertices": 5004,
+          "triangles": 9936,
+          "center": [
+            -0.5943978428840637,
+            -0.3621041476726532,
+            -9.529119854301271e-11
+          ],
+          "bounds": [
+            [
+              -0.9220697283744812,
+              -1.0848877429962158,
+              -0.319288969039917
+            ],
+            [
+              0.12331125885248184,
+              0.4851714074611664,
+              0.3192889094352722
+            ]
+          ]
+        },
+        {
+          "id": "gut_tube",
+          "name": "gut tube",
+          "group": "gut",
+          "file": "form3-gut_tube.bin",
+          "vertices": 3072,
+          "triangles": 6140,
+          "center": [
+            -0.24216912686824799,
+            -0.16348537802696228,
+            4.875801096204668e-09
+          ],
+          "bounds": [
+            [
+              -0.48964694142341614,
+              -0.7825181484222412,
+              -0.09111832082271576
+            ],
+            [
+              0.36993131041526794,
+              0.6160272359848022,
+              0.09111829102039337
+            ]
+          ]
+        },
+        {
+          "id": "paired_vessels",
+          "name": "paired vessels",
+          "group": "vessels",
+          "file": "form3-paired_vessels.bin",
+          "vertices": 1416,
+          "triangles": 2576,
+          "center": [
+            -0.3869915008544922,
+            -0.3872447907924652,
+            6.093059390366307e-09
+          ],
+          "bounds": [
+            [
+              -0.7139397859573364,
+              -1.042281985282898,
+              -0.146041139960289
+            ],
+            [
+              0.7405508756637573,
+              0.5740000009536743,
+              0.1460411101579666
+            ]
+          ]
+        },
+        {
+          "id": "optic_vesicles",
+          "name": "optic vesicles",
+          "group": "sensory",
+          "file": "form3-optic_vesicles.bin",
+          "vertices": 664,
+          "triangles": 1320,
+          "center": [
+            0.2395804077386856,
+            0.9197890758514404,
+            -1.7953206921106357e-08
+          ],
+          "bounds": [
+            [
+              0.15206357836723328,
+              0.8170758485794067,
+              -0.4499861001968384
+            ],
+            [
+              0.3279362618923187,
+              1.0229243040084839,
+              0.44998615980148315
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

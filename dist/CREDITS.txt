@@ -1,0 +1,8 @@
+Embryo Explorer
+
+Original procedural geometry, interface, animation, and camera choreography created for this project.
+The model is a simplified illustration of mammalian embryonic form, not a measured specimen or predictive simulation.
+The three forms are conceptual stages. Surface particles do not represent measured cells.
+
+Three.js and OrbitControls: MIT License, Three.js authors.
+License: vendor/LICENSE.txt.
