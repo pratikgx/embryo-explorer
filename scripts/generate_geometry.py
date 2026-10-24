@@ -54,9 +54,9 @@ for num,(label,curl,head,limb) in enumerate([('Early fold',.65,.72,0),('Body pla
  neural=tube(spine[:-1]+np.array([-.035,.015,0]),[.19,.145,.125,.1,.065,.025])
  neural=union([neural,ell([-.36,1.13,0],[.34*head,.42*head,.31*head]),ell([.06,1.22,0],[.3*head,.33*head,.29*head])],.12)
  parts.append(save(neural,ident,'neural_tube','neural'))
- heart=tube([[.02,.34,.12],[.22,.25,.18],[.26,.02,.2],[.04,-.12,.16],[-.1,.03,.12],[.01,.16,.08]],[.075,.14,.155,.12,.09,.06],34)
- heart=sm(heart,ell([.2,.03,.18],[.2,.22,.18]),.085)
- heart=sm(heart,ell([-.03,.25,.12],[.12,.14,.12]),.075)
+ heart=tube([[-.08,.3,.06],[.08,.25,.04],[.24,.08,.1],[.15,-.12,.2],[-.08,-.13,.2],[-.22,.05,.13],[-.13,.16,.04]],[.045,.075,.1,.12,.1,.075,.04],45)
+ heart=sm(heart,ell([.11,-.09,.2],[.16,.14,.12]),.035)
+ heart=sm(heart,ell([-.13,.16,.05],[.09,.09,.08]),.03)
  parts.append(save(heart,ident,'heart','heart'))
  som=[]
  path=CubicSpline(np.linspace(0,1,len(spine)),spine)(np.linspace(.2,.67,9))
