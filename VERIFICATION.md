@@ -148,3 +148,11 @@ The research matrix is implemented as schematic geometry. Embryonic/fetal shapes
 ## Motion and export
 
 Pointer movement gently shifts environmental light fields, light position and model orientation. Dragging suppresses pointer parallax; touch and reduced-motion settings suppress it. The demo is explicit user-initiated motion. Film export uses the same models at 1920 × 1080; browser recording quality depends on runtime performance. Export and public delivery are checked separately before handoff.
+
+## Overview-to-inspection continuation (October 24, 2026)
+
+- Overview hover/focus targets persist when moving onto the exploration slider. A remembered component can continue directly to 100% inspection.
+- When no stage has been targeted, a stage selector explains the next step and preserves the requested destination; a part selector follows when required. No arbitrary organ is selected.
+- Stage and Inspect milestone labels are buttons. Wheel input over the dock controls exploration; native scrolling remains available inside the selector and the compact overview.
+- Removed the rectangular range focus outline and softened the dock. Keyboard focus remains visible around the thumb.
+- Browser QA: unselected End → stage picker → Week 16 → heart inspection; overview keyboard target → Week 20 skeleton inspection; wheel over slider and pointer drag to the end; 100% displayed, framing true. Existing three slider pointer/keyboard tests pass. These checks used a desktop browser, not physical mobile hardware.

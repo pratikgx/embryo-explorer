@@ -114,3 +114,9 @@ body:has(.site-credits) #home{bottom:208px}
 #focusParts button[data-selected=true]{outline:1px solid #8ca17d88;background:#9db78a0c}
 body[data-choose-inspect=true]:has(.site-credits) #home{bottom:288px}
 @media(max-width:1100px),(pointer:coarse){body[data-choose-inspect=true]:has(.site-credits) #home{bottom:calc(var(--scene-bottom) + 82px)}body[data-choose-inspect=true][data-home-info=true]:has(.site-credits) #home{bottom:calc(var(--scene-bottom) + var(--info-height,180px) + 92px)}}
+
+/* Keep the dock quiet; keyboard focus belongs on the thumb, not a box around the track. */
+#homeSlider,#exploreSlider{outline:none;border:0;box-shadow:none}
+#homeSlider:focus-visible::-webkit-slider-thumb,#exploreSlider:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px #819b70,0 0 0 6px #ffffff}
+#homeSlider:focus-visible::-moz-range-thumb,#exploreSlider:focus-visible::-moz-range-thumb{box-shadow:0 0 0 3px #819b70,0 0 0 6px #ffffff}
+body:has(.site-credits) #homeExploration,body:has(.site-credits) #exploration{border-color:transparent;background:#ffffffb8;box-shadow:0 4px 24px #52634c04;backdrop-filter:blur(10px)}

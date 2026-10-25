@@ -7,7 +7,7 @@ const $=id=>document.getElementById(id),clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b
 const grid=$('stageBoard'),canvas=$('homeScene'),reduce=matchMedia('(prefers-reduced-motion: reduce)'),compact=matchMedia('(max-width: 1100px), (pointer: coarse)');
 import {bindExplorationSlider} from './touch-controls.js?v=mobile1';
 const defaultHint=()=>compact.matches?'Swipe to browse · Tap a stage to explore':'Scroll to explore · Point to a stage or part to zoom further';
-let overviewScroll=0,inspectionCandidate=null,waitingForPart=false;
+let overviewScroll=0,inspectionCandidate=null,stageCandidate=null,waitingForPart=false,waitingForStage=false,requestedProgress=0;
 const renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:true});renderer.setClearColor(0xffffff,0);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.02;
 const scene=new T.Scene();scene.add(new T.HemisphereLight(0xffffff,0x99968b,1.75));const light=new T.DirectionalLight(0xfff5ed,3.3);light.position.set(3,6,7);scene.add(light);const rim=new T.DirectionalLight(0xe4edf1,1.8);rim.position.set(-4,2,-4);scene.add(rim);const fill=new T.DirectionalLight(0xfff9f1,.45);fill.position.set(-3,0,3);scene.add(fill);
 const records=[],identity=new T.Quaternion(),ray=new T.Raycaster(),hidden=new Set();
@@ -19,19 +19,34 @@ function name(i,key){return stages[i].age+' · '+(key?systems[key][0]:stages[i].
 function updateInfo(){if(!selected)return;const {i,key}=selected;status(name(i,key));$('homeInfo').hidden=false;document.body.dataset.homeInfo='true';$('homeInfoAge').textContent=stages[i].age+' · '+ageBasis(stages[i]);$('homeInfoName').textContent=key?systems[key][0]:stages[i].name;$('homeInfoDescription').textContent=key?detail(key,i):stages[i].note;$('enterStage').textContent=key?'Zoom into this part':'Zoom into this stage';grid.querySelectorAll('.stage-card').forEach(c=>c.dataset.active=String(+c.dataset.card===i));}
 function setFocus(i){if(focused!==i)inspectionCandidate=null;if(focused===null)overviewScroll=grid.scrollTop;focused=i;document.body.dataset.focusStage=i;$('focusStage').value=i;updateSystems();resize();dirty=true;}
 function showInspectPicker(show){
- waitingForPart=show;$('inspectPicker').hidden=!show;document.body.dataset.chooseInspect=String(show);
+ waitingForPart=show;waitingForStage=false;$('inspectPicker').querySelector('label').textContent='Inspect a part';$('inspectTarget').setAttribute('aria-label','Part to inspect');$('inspectPicker').hidden=!show;document.body.dataset.chooseInspect=String(show);
  if(show&&focused!==null){
   const keys=stages[focused].parts.filter(k=>!hidden.has(k));
   $('inspectTarget').innerHTML='<option value="">Choose a part…</option>'+keys.map(k=>`<option value="${k}">${systems[k][0]}</option>`).join('');
   status(keys.length?'Choose a part to continue into Inspect':'Show a structure in Systems to inspect it');
  }
 }
-function rememberPart(i,key){if(key&&i===focused&&progress>=125&&!hidden.has(key)){inspectionCandidate={i,key};dirty=true;}}
-$('inspectTarget').onchange=e=>{if(e.target.value&&focused!==null)choose(focused,e.target.value);};
+function showStagePicker(){
+ waitingForStage=true;waitingForPart=false;$('inspectPicker').hidden=false;document.body.dataset.chooseInspect='true';
+ $('inspectPicker').querySelector('label').textContent='Explore a stage';$('inspectTarget').setAttribute('aria-label','Stage to explore');
+ $('inspectTarget').innerHTML='<option value="">Choose a stage…</option>'+stages.map((s,i)=>`<option value="stage:${i}">${s.age} · ${s.name}</option>`).join('');
+ status('Choose a stage, then a part to continue to 100%');
+}
+function rememberPart(i,key){
+ const visibleKey=key&&!hidden.has(key)?key:null;
+ if(focused===null)stageCandidate={i,key:progress>=94?visibleKey:null};
+ if(visibleKey&&i===focused&&progress>=125){inspectionCandidate={i,key:visibleKey};dirty=true;}
+}
+
+$('inspectTarget').onchange=e=>{
+ const value=e.target.value;if(!value)return;
+ if(value.startsWith('stage:')){const i=Number(value.slice(6)),destination=requestedProgress;selected={i,key:null};stageCandidate={i,key:null};setFocus(i);updateInfo();request(destination);}
+ else if(focused!==null)choose(focused,value);
+};
 function request(value){
- pendingChoice=null;let next=clamp(Number(value)||0,0,160);showInspectPicker(false);
- if(next>100&&focused===null){const candidate=selected||hover;if(!candidate){next=100;status(compact.matches?'Tap a stage above to continue closer':'Point to a stage or part to zoom further');}else{selected={i:candidate.i,key:candidate.key||systemHighlight||null};if(!stages[selected.i].parts.includes(selected.key)||hidden.has(selected.key))selected.key=null;setFocus(selected.i);updateInfo();}}
- if(next>130&&!selected?.key){
+ pendingChoice=null;let next=clamp(Number(value)||0,0,160);requestedProgress=next;showInspectPicker(false);
+ if(next>100&&focused===null){const candidate=selected||hover||stageCandidate;if(!candidate){next=100;showStagePicker();}else{selected={i:candidate.i,key:candidate.key||systemHighlight||null};if(!stages[selected.i].parts.includes(selected.key)||hidden.has(selected.key))selected.key=null;setFocus(selected.i);updateInfo();}}
+ if(next>130&&focused!==null&&!selected?.key){
   const candidate=hover?.i===focused&&hover.key?hover:inspectionCandidate;
   const key=candidate?.i===focused?candidate.key:null;
   if(key&&stages[focused].parts.includes(key)&&!hidden.has(key)){selected={i:focused,key};updateInfo();}
@@ -56,10 +71,10 @@ function bindSurface(b,getIndex,getKey=null){let down=null,suppress=false,presse
  b.onpointerdown=e=>{if(e.button!==0)return;pressedKey=e.target.closest('[data-key]')?.dataset.key||null;if(compact.matches&&focused===null){down={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};suppress=false;return;}resetting=false;suppress=false;pointers.set(e.pointerId,[e.clientX,e.clientY]);down={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY};b.setPointerCapture(e.pointerId);if(pointers.size===2){const [a,c]=[...pointers.values()];pinch=Math.hypot(a[0]-c[0],a[1]-c[1]);}};
  b.onpointermove=e=>{if(compact.matches&&focused===null){if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>8)suppress=true;return;}const i=getIndex();if(i===null)return;if(pointers.has(e.pointerId))pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){const [a,c]=[...pointers.values()],distance=Math.hypot(a[0]-c[0],a[1]-c[1]);hover={i,key:pick(i,e.clientX,e.clientY)};if(pinch)request(target+(distance-pinch)*.25);pinch=distance;suppress=true;return;}
  if(down){if(Math.hypot(e.clientX-down.x,e.clientY-down.y)>5)suppress=true;if(suppress&&records[i]){records[i].yaw-=(e.clientX-down.lastX)*.012;records[i].pitch=clamp(records[i].pitch+(e.clientY-down.lastY)*.01,-1.05,1.05);dirty=true;}down.lastX=e.clientX;down.lastY=e.clientY;return;}
- const key=pick(i,e.clientX,e.clientY);if(hover?.i!==i||hover?.key!==key){hover={i,key};rememberPart(i,key);status(name(i,key));$('hoverName').textContent=key?systems[key][0]:'';dirty=true;}};
+ const key=pick(i,e.clientX,e.clientY);rememberPart(i,key);if(hover?.i!==i||hover?.key!==key){hover={i,key};rememberPart(i,key);status(name(i,key));$('hoverName').textContent=key?systems[key][0]:'';dirty=true;}};
  b.onpointerup=b.onpointercancel=e=>{if(e.type==='pointercancel')suppress=true;pointers.delete(e.pointerId);pinch=null;down=null;if(b.hasPointerCapture(e.pointerId))b.releasePointerCapture(e.pointerId);};
  b.onclick=e=>{if(suppress){suppress=false;return;}const i=getIndex();if(i!==null)choose(i,getKey?(e.detail===0?getKey(e):pressedKey||getKey(e)):(e.detail===0||(compact.matches&&focused===null))?null:pick(i,e.clientX,e.clientY));};
- b.onfocus=()=>{const i=getIndex();if(i!==null){hover={i,key:null};status(name(i,null));}};
+ b.onfocus=()=>{const i=getIndex();if(i!==null){hover={i,key:null};rememberPart(i,null);status(name(i,null));}};
  b.onpointerleave=()=>{if(!down){hover=null;$('hoverName').textContent='';dirty=true;}};
 }
 grid.querySelectorAll('[data-open]').forEach(b=>bindSurface(b,()=>+b.dataset.open));bindSurface($('focusLayer'),()=>focused,e=>e.target.closest('[data-key]')?.dataset.key||pick(focused,e.clientX,e.clientY));
@@ -75,8 +90,8 @@ $('showSystems').onclick=()=>{hidden.clear();updateSystems();dirty=true;};$('sys
 bindExplorationSlider($('homeSlider'),value=>{request(value);return target;});
 for(const b of document.querySelectorAll('[data-progress]'))b.onclick=()=>request(+b.dataset.progress);
 window.addEventListener('pointermove',e=>{if(reduce.matches||e.pointerType==='touch'||e.buttons)return;document.documentElement.style.setProperty('--px',(e.clientX/innerWidth-.5)*12+'px');document.documentElement.style.setProperty('--py',(e.clientY/innerHeight-.5)*8+'px');});
-$('home').addEventListener('wheel',e=>{if($('sources').open||e.target.closest('#homeExploration')||(compact.matches&&focused===null))return;e.preventDefault();const f=Math.floor(performance.now()/16);if(f!==lastWheel){lastWheel=f;wheelSum=0;}const delta=clamp(e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1)*.065,-4,4),allowed=Math.sign(delta)*Math.min(Math.abs(delta),4-Math.abs(wheelSum));wheelSum+=allowed;request(target+allowed);},{passive:false});
-$('reset').onclick=()=>{pendingChoice=null;if(focused===null)closeInfo();hidden.clear();systemHighlight=null;resetting=true;overviewScroll=0;grid.scrollTop=0;hover=null;inspectionCandidate=null;request(0);updateSystems();};
+$('home').addEventListener('wheel',e=>{if($('sources').open||e.target.closest('#inspectPicker')||(compact.matches&&focused===null&&!e.target.closest('#homeExploration')))return;e.preventDefault();const f=Math.floor(performance.now()/16);if(f!==lastWheel){lastWheel=f;wheelSum=0;}const delta=clamp(e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1)*.065,-4,4),allowed=Math.sign(delta)*Math.min(Math.abs(delta),4-Math.abs(wheelSum));wheelSum+=allowed;request(target+allowed);},{passive:false});
+$('reset').onclick=()=>{pendingChoice=null;if(focused===null)closeInfo();hidden.clear();systemHighlight=null;resetting=true;overviewScroll=0;grid.scrollTop=0;hover=null;inspectionCandidate=null;stageCandidate=null;request(0);updateSystems();};
 $('sourceBtn').onclick=()=>$('sources').showModal();$('closeSources').onclick=()=>$('sources').close();$('sources').onclick=e=>{if(e.target===$('sources'))e.target.close();};
 function measureBoxes(){boxes=[...grid.querySelectorAll('.stage-card')].map(c=>{const r=c.getBoundingClientRect();return {left:r.left,top:r.top,width:r.width,height:Math.max(1,r.height-(compact.matches?40:27))};});dirty=true;}
 grid.addEventListener('scroll',measureBoxes,{passive:true});
